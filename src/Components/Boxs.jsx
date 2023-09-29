@@ -20,10 +20,12 @@ const Boxs = () => {
         email, password
       })
         .then(res => {
-          if (res.data === "exist") {
-            history("/home", { state: { id: email } })
+          console.log("response",res)
+          if (res.data && res.data.user && res.data.user._id) {
+            const userId=res.data.user._id;
+            history("/home",{state:{userId:userId}})
           }
-          else if (res.data === "notexist") {
+          else if (res.data === "User does not exist") {
             alert("User have not sign up")
           }
         })

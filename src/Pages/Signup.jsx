@@ -14,11 +14,17 @@ function Signup() {
     const [lastname, setLastname] = useState('');
     const [gender, setGender] = useState('');
     const [phone, setPhone] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
 
 
 
     async function submit(e) {
         e.preventDefault();
+        // Check if password and confirm password match
+        if (password !== ConfirmPassword) {
+            setPasswordError(true); // Set password error to true
+            return;
+        }
 
         try {
 
@@ -26,17 +32,18 @@ function Signup() {
                 email, password, ConfirmPassword, firstname, lastname, gender, phone
             })
                 .then(res => {
+                    console.log("response",res)
                     if (res.data === "exist") {
                         alert("User already exists")
                     }
-                    else if (res.data === "notexist") {
-                        history("/home", { state: { id: firstname } })
+                    else if (res.data === "not exist") {
+                        history("/home", { state: { id: email } })
                     }
                 })
                 .catch(e => {
                     alert("wrong details")
                     console.log(e);
-                })
+                });
 
         }
         catch (e) {
@@ -47,10 +54,15 @@ function Signup() {
     }
 
     return (
-        <div className="sihnup">
+        <div className="signup">
 
             <h1>Signup</h1>
             <form method='POST'>
+                <TextField onChange={(e) => setFirstname(e.target.value)} label="firstname" placeholder='firstname' variant='outlined'>Firstname</TextField>
+                <br />
+                <TextField onChange={(e) => setLastname(e.target.value)} label="lastname" placeholder='lastname' variant='outlined'>Lastname</TextField>
+                <br />
+
                 <TextField onChange={(e) => { setEmail(e.target.value) }}
                     label="email"
                     placeholder='email'
@@ -68,12 +80,12 @@ function Signup() {
                     label="ConfirmPassword"
                     placeholder="ConfirmPassword"
                     variant="outlined"
+                    error={passwordError} // Set the error prop based on passwordError state
+                    helperText={passwordError ? "Passwords do not match" : ""} // Display an error message when passwords don't match
                 />
                 <br />
-                <TextField onChange={(e) => setFirstname(e.target.value)} label="firstname" placeholder='firstname' variant='outlined'>Firstname</TextField>
-                <br />
-                <TextField onChange={(e) => setLastname(e.target.value)} label="lastname" placeholder='lastname' variant='outlined'>Lastname</TextField>
-                <br />
+
+
                 <TextField onChange={(e) => setGender(e.target.value)} label="gender" placeholder='gender' variant='outlined'>Gender</TextField>
                 <br />
                 <TextField

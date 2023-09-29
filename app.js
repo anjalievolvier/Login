@@ -17,23 +17,25 @@ app.post("/", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const check = await collection.findOne({ email: email, password: password });
+        const user = await collection.findOne({ email: email, password: password });
 
-        if (check) {
-
-            res.json("exist");
+        if (user) {
+            console.log("User found", user);
+            res.json({ message: "User exists",user:user});
         }
 
         else {
+            console.log("User not found");
+            res.json({ message: "User does not exist" });
 
-            res.json("notexist");
+
         }
 
     }
 
     catch (e) {
-
-        res.json("fail");
+        console.error("Error during login:", e);
+        res.status(500).json({ message: "Login failed" });
     }
 
 });
@@ -56,54 +58,67 @@ app.post("/signup", async (req, res) => {
         const check = await collection.findOne({ email: email });
 
         if (check) {
-            res.json("exist")
+            console.log("User already exists");
+            res.json({ message: "User already exists" });
         }
         else {
-            res.json("notexist")
-
+            
+            console.log("User registered:");
+            res.json( "not exist");
             await collection.insertMany([data]);
-
         }
 
     }
     catch (e) {
-        console.error(e);
-        res.json("fail")
+        console.error("Error during signup:", e);
+        res.status(500).json({ message: "Signup failed" });
     }
 
-})
-// Endpoint to retrieve user details
+});
 app.get("/user/:id", async (req, res) => {
     const userId = req.params.id;
+  
     try {
-        const user = await collection.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
+      // Use the userId to find the user in the MongoDB collection
+      const user = await collection.findOne({ _id: userId });
+  
+      if (user) {
+        // Send the user details as JSON response
         res.json(user);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Server error" });
+      } else {
+        // If user is not found, return a 404 status and an error message
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (e) {
+      console.error("Error fetching user details:", e);
+      res.status(500).json({ message: "Internal server error" });
     }
-});
-// Endpoint to update user details
-app.put("/user/:id", async (req, res) => {
-    const userId = req.params.id;
-    const updatedData = req.body;
-    try {
-        const user = await collection.findByIdAndUpdate(userId, updatedData, {
-            new: true,
-        });
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-        res.json(user);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
+  });
+//   app.put("/user/:id", async (req, res) => {
+//     const userId = req.params.id;
+//     const updatedUserData = req.body; // The updated user information
+  
+//     try {
+//       // Update the user's information in the MongoDB collection
+//       const updatedUser = await collection.findOneAndUpdate(
+//         { _id: userId },
+//         { $set: updatedUserData },
+//         { new: true } // Return the updated document
+//       );
+  
+//       if (updatedUser) {
+//         // Send the updated user details as JSON response
+//         res.json(updatedUser);
+//       } else {
+//         // If user is not found, return a 404 status and an error message
+//         res.status(404).json({ message: "User not found" });
+//       }
+//     } catch (e) {
+//       console.error("Error updating user details:", e);
+//       res.status(500).json({ message: "Internal server error" });
+//     }
+//   });
+  
 app.listen(8000, () => {
-    console.log("port connected");
+    console.log("Server is running on port 8000");
 })

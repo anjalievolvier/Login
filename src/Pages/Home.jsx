@@ -1,33 +1,45 @@
-import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-function Home({user}) {
-    const [userData, setUser] = useState({});
-    const location = useLocation;
-    const userId = location.state;
-    useEffect(() => {
-        // Fetch user details when the component mounts
-        // You may want to add error handling here
-        fetch(`/user/${userId}`)
-            .then((response) => response.json())
-            .then((data) => setUser(data));
-    }, [userId]);
-    //check if data is available
-    if(!user){
-        return<div>Loading.....</div>
+const Home = () => {
+    const location = useLocation();
+    const userId = location.state.userId;
+
+    
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+
+    // Fetch the user details using the user ID
+    if(userId){
+    axios.get(`http://localhost:8000/user/${userId}`)
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user details:", error);
+      });
     }
+  }, [userId]);
 
-    return (
-        <div className="homepage">
-
-            <h1>Hello {user.firstname} and welcome to the home</h1>
-            <p>Email:{userData.email}</p>
-            <p>Phone Number:{userData.phone}</p>
-            <p>Gender:{userData.gender}</p>
-            <Link to={`/edit/${user._id}`}>Edit Profile</Link>
-
+  return (
+    <div>
+      {user ? (
+        <div>
+          <h1>Welcome,</h1>
+          <p>Name: {user.firstname} {user.lastname}</p>
+          <p>Email: {user.email}</p>
+          <p>Password:{user.password}</p>
+          <p>Gender: {user.gender}</p>
+          <p>Phone: {user.phone}</p>
+          <Link to ="/">Logout</Link>
         </div>
-    );
-}
+      ) : (
+        <p>Loading user details...</p>
+      )}
+    </div>
+  );
+};
 
 export default Home;
