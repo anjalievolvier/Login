@@ -7,7 +7,7 @@ import TopText from './TopText'
 const LoginBox = () => {
   return (
     <Grid container>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={6} sm={6} md={4}>
         <Box
           sx={{
             backgroundColor: '#E1E3FF',
@@ -55,20 +55,20 @@ const LoginBox = () => {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', marginLeft: '15px', marginTop: '10px', }}>
-            <Typography 
-            sx={{
-              color: '#000',
-        textAlign: 'center',
-        fontFamily: 'Aleo, sans-serif',
-        fontSize: '10px',
-        fontStyle: 'normal',
-        fontWight: '400',
-        lineHeight: 'normal',
-            }} >
+            <Typography
+              sx={{
+                color: '#000',
+                textAlign: 'center',
+                fontFamily: 'Aleo, sans-serif',
+                fontSize: '10px',
+                fontStyle: 'normal',
+                fontWeight: '400',
+                lineHeight: 'normal',
+              }} >
               By signing in you are agreeing to our{' '}
-              <span sx={{ textDecoration: 'underline' }}>Terms and Conditions &nbsp;</span>
-              <span sx={{ textDecorationLine: 'none' }}>&</span>
-              <span sx={{ textDecorationLine: 'underline' }}> Privacy Policy</span>
+              <span style={{ textDecoration: 'underline' }}>Terms and Conditions &nbsp;</span>
+              <span sxtyle={{ textDecoration: 'none' }}>&</span>
+              <span style={{ textDecoration: 'underline' }}> Privacy Policy</span>
 
             </Typography>
           </Box>

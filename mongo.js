@@ -9,11 +9,13 @@ mongoose.connect("mongodb://localhost:27017/react-login")
 const newSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 8,
     },
     firstname: {
         type: String,
@@ -29,7 +31,7 @@ const newSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        required: true
+        required: true,
     }
 })
 const collection = mongoose.model("collection", newSchema)
