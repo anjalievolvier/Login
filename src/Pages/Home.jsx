@@ -59,7 +59,8 @@ const Home = () => {
       {user ? (
         <div>
           <h1>Welcome,</h1>
-          <p>Name: {isEditing ? <input type="text" name="firstname" value={editedUser.firstname} onChange={handleInputChange} /> : user.firstname}
+          <p>Name:{isEditing ? <input type="text" name="firstname" value={editedUser.firstname} onChange={handleInputChange} /> : user.firstname}
+          
           {isEditing ? <input type="text" name="lastname" value={editedUser.lastname} onChange={handleInputChange} /> : user.lastname}</p>
           <p>Email: {isEditing ? <input type="email" name="Email" value={editedUser.email} onChange={handleInputChange} />:user.email}</p>
           <p>Password: {isEditing ? <input type="password" name="Password" value={editedUser.password} onChange={handleInputChange} />:user.password}</p>
