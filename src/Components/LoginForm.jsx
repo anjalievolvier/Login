@@ -53,7 +53,7 @@ const LoginForm = () => {
       alignItems="center"
       spacing={2}
     >
-      <Grid item xs={12} sm={8} md={6} lg={10}>
+      <Grid item xs={10} sm={10} md={8} lg={10} >
         <Box>
           <TextField
             label={
@@ -71,11 +71,12 @@ const LoginForm = () => {
             variant="outlined"
             sx={{
               width: '100%',
-              height: '53.667px',
+              height: '55px',
               borderRadius: 0,
               border: '1px solid #736EFF',
               background: '#F4F4FF',
               marginTop: '10px',
+              padding:'0',
             }}
           />
           <TextField
@@ -95,7 +96,7 @@ const LoginForm = () => {
             type={showPassword ? 'text' : 'password'}
             sx={{
               width: '100%',
-              height: '53.667px',
+              height: '55px',
               border: '1px solid #736EFF',
               background: '#F4F4FF',
               marginTop: '10px',
