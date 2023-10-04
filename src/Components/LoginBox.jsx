@@ -1,25 +1,27 @@
 import React from 'react';
-import { Grid, Box, Typography, Divider } from '@mui/material';
+import { Grid, Box, Typography, Divider} from '@mui/material';
 import { Link } from "react-router-dom";
 import LoginForm from './LoginForm';
 import AltLogin from './AltLogin';
 import TopText from './TopText';
 
 const LoginBox = () => {
-  const isMobile = window.innerWidth <= 768; // Define a threshold for mobile view
+  const isMobile = window.innerWidth <= 600; // Define a threshold for mobile view
 
   return (
     <Grid container>
-      <Grid item xs={10} sm={10} md={11}>
+      <Grid item xs={12} sm={12} md={12}>
         <Box
           sx={{
             backgroundColor: '#E1E3FF',
-            width: '100%',
-            height: '530px',
-            margin: "80px 10px 10px 20px",
+            // width: '100%',
+            height: '100%',
+            marginBottom: "10px",
+            padding:"10px",
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            marginTop:'25px'
           }}
         >
           {!isMobile && <TopText />} 
@@ -31,7 +33,7 @@ const LoginBox = () => {
               sx={{
                 marginTop: '20px',
                 marginBottom: '20px',
-                width: '470px',
+                width: '100%',
                 height: '1.5px',
                 background: '#180E95',
               }}
@@ -54,14 +56,16 @@ const LoginBox = () => {
           ) : (
             <>
               <LoginForm />
-              <Box>
+              {/* <Box>
             <Divider
               sx={{
+                textAlign:'center',
                 marginTop: '20px',
                 marginBottom: '20px',
-                width: '470px',
-                height: '1.5px',
+                width: '100%',
+                height: '1.3px',
                 background: '#180E95',
+                
               }}
             >
               <Typography
@@ -76,7 +80,8 @@ const LoginBox = () => {
                 or
               </Typography>
             </Divider>
-          </Box>
+          </Box> */}
+
               <AltLogin />
             </>
           )}

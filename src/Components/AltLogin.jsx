@@ -15,7 +15,7 @@ const AltLogin = () => {
                         }}>
                             <Typography 
                             sx={{
-                                color: '#000',
+                            color: '#000',
                             fontFamily: 'Aleo, sans-serif',
                             fontSize: '15px',
                             fontStyle: 'normal',
@@ -24,7 +24,7 @@ const AltLogin = () => {
                             }}>Login </Typography>
                             <Typography
                             sx={{
-                                color: '#000',
+                            color: '#000',
                             fontFamily: 'Aleo, sans-serif',
                             fontSize: '15px',
                             fontStyle: 'normal',
@@ -37,15 +37,15 @@ const AltLogin = () => {
                                 src='/google.png'
                                 alt='Google'
                                 style={{
-                                    width: '40px',
-                                    height: '40px',
+                                    width: '100%',
+                                    height: '100%',
                                 }} />
                             <img
                                 src='/facebook.png'
                                 alt='Facebook'
                                 style={{
-                                    width: '40px',
-                                    height: '40px',
+                                    width: '100%',
+                                    height: '100%',
                                 }} />
                         </Box>
                     </Box>

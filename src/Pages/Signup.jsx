@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Grid } from '@mui/material';
 import Logo from '../Components/Logo';
 import SignupBox from '../Components/SignupBox';
 import BgImage from '../Components/BgImage';
 const Signup = () => {
   return (
-    <Box
+    <Grid container
       sx={{
         backgroundColor: '#180E95',
         minHeight: '100vh',
@@ -13,10 +13,14 @@ const Signup = () => {
         flexDirection: 'row',
       }}
     >
+      <Grid item marginLeft={'30px'} marginTop={'10px'} marginRight={'20px'}>
   <Logo/>
       <SignupBox />
+      </Grid>
+      <Grid item marginLeft={'30px'}>
       <BgImage />
-    </Box>
+      </Grid>
+      </Grid>
   );
 };
 

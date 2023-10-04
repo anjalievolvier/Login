@@ -4,7 +4,7 @@ const Logo = () => {
   return (
     <Box sx={{
       maxWidth: '350px',
-      width: '20px',
+      width: '100%',
       height: 'auto',
       textAlign: 'center',
 
@@ -14,9 +14,9 @@ const Logo = () => {
         alt="Logo"
         style={{
           maxWidth: '100vw',
-          width: '350px',
-          margin:'20px',
-          height: 'auto'
+          width: '100%',
+          height: 'auto',
+          marginTop:'20px'
         }} />
     </Box>
   )

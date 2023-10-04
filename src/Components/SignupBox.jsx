@@ -9,9 +9,9 @@ const SignupBox = () => {
         <Box
           sx={{
             backgroundColor: '#E1E3FF',
-            width: '100%',
-            height: '530px',
-            margin: '80px 10px 10px 20px',
+            width: '500px',
+            height: '500px',
+            margin: '10px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
