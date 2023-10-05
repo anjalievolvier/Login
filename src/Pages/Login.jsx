@@ -47,8 +47,7 @@ const Login = () => {
           </Grid>
           <Grid item xs={12} sm={6} 
           sx={{backgroundImage:"url('/Login.png')",
-          backgroundSize:'cover'}}>
-            {/* <BgImage /> */}
+          backgroundSize:'cover',}}>
           </Grid>
         </Grid>
       )}

@@ -1,17 +1,19 @@
 import React from 'react';
-import { Grid, Box,Typography } from '@mui/material';
+import { Box,Typography } from '@mui/material';
 import SignupForm from './SignupForm';
 
 const SignupBox = () => {
   return (
-    <Grid container>
-      <Grid item xs={10} sm={10} md={11}>
-        <Box
+  
+        <Box xs={12} sm={12} md={12} spacing={'2'}
+        display={'flex'}
+     flexDirection={'row'}
           sx={{
             backgroundColor: '#E1E3FF',
             width: '500px',
             height: '500px',
-            margin: '10px',
+             margin: '20px',
+             padding:'50px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -37,8 +39,6 @@ const SignupBox = () => {
             </Typography>
           </Box>
         </Box>
-      </Grid>
-    </Grid>
   );
 };
 

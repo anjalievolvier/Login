@@ -7,9 +7,10 @@ const TopText = () => {
       flexDirection: 'column',
       alignItems: 'flex-start',
       width: '100%',
-      marginBottom: '10px',
-      marginLeft: '100px',
-      marginTop: '40px'
+      // marginBottom: '10px',
+      // marginLeft: '100px',
+      // marginTop: '40px',
+      // padding:'20px'
     }}>
       <Typography sx={{
         color: '#000',
@@ -19,7 +20,7 @@ const TopText = () => {
         fontWeight: '700',
         lineHeight: 'normal',
         marginBottom: '5px',
-        marginLeft:'5px'
+        // marginLeft:'5px'
       }}>Login</Typography>
       <Typography sx={{
         color: '#000',
@@ -28,8 +29,9 @@ const TopText = () => {
         fontStyle: 'normal',
         fontWeight: '400',
         lineHeight: 'normal',
-        padding:'10px',
-        marginRight:'40px'
+        marginBottom:'15px'
+        // padding:'0px',
+        // marginRight:'40px'
       }}>Welcome to the World of Healthcare! Please log in to access your personalized health information
         and services.</Typography>
     </Box>

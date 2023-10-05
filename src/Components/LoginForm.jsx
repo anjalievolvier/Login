@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   Grid,
-  Box,
   TextField,
   Typography,
   Button,
@@ -54,8 +53,8 @@ const LoginForm = () => {
       spacing={2}
       overflow={'hidden'}
     >
-      <Grid item xs={12} sm={10} md={10} lg={10} >
-        <Box>
+      <Grid item xs={12} sm={12} md={12} lg={12} >
+        
           <TextField
             label={
               <Typography sx={{
@@ -71,15 +70,17 @@ const LoginForm = () => {
             placeholder="Email"
             variant="outlined"
             sx={{
-              width: '100%',
+              width: '99%',
               height: '55px',
               borderRadius: 0,
               border: '1px solid #736EFF',
               background: '#F4F4FF',
-              marginTop: '10px',
-              padding:'0',
+              // marginTop: '10px',
+              // padding:'0',
             }}
           />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} >
           <TextField
             label={
               <Typography sx={{
@@ -96,11 +97,11 @@ const LoginForm = () => {
             variant="outlined"
             type={showPassword ? 'text' : 'password'}
             sx={{
-              width: '100%',
+              width: '99%',
               height: '55px',
               border: '1px solid #736EFF',
               background: '#F4F4FF',
-              marginTop: '10px',
+              // marginTop: '10px',
             }}
             InputProps={{
               endAdornment: (
@@ -116,6 +117,8 @@ const LoginForm = () => {
               ),
             }}
           />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} >
           <Button
             onClick={submit}
             fullWidth
@@ -129,15 +132,14 @@ const LoginForm = () => {
               lineHeight: 'normal',
               backgroundColor:'#180E95',
               textTransform: 'capitalize',
-              marginTop: '10px',
+              // marginTop: '10px',
               height: '60px',
               borderRadius: '0',
-              width: '100%',
+              width: '99%',
             }}
           >
             Continue
           </Button>
-        </Box>
       </Grid>
     </Grid>
   );

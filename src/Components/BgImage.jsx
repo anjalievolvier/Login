@@ -21,17 +21,6 @@ const BgImage = () => {
       </Grid>
 
     </Grid>
-    
-    // <Box
-    //   sx={{
-    //     height: '100vh',
-    //     width: '100vw',
-    //     backgroundImage: `url("/Login.png")`,
-    //     backgroundSize: 'cover',
-    //     backgroundPosition: 'center',
-    //     backgroundRepeat: 'no-repeat',
-    //   }}
-    // ></Box>
   );
 };
 

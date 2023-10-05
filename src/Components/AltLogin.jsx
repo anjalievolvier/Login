@@ -3,11 +3,11 @@ import React from 'react'
 
 const AltLogin = () => {
     return (
-        <Box>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} md={4}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>
-                        <Box sx={{
+        <Box xs={12} sm={12} md={12} sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>
+            {/* <Grid container spacing={2}> */}
+                 {/* <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>  */}
+                    {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}> */}
+                        <Grid item sx={{
                             display: 'flex',
                             flexDirection: 'row',
                             gap: '5px',
@@ -31,27 +31,32 @@ const AltLogin = () => {
                             fontWeight: '700',
                             lineHeight: 'normal',
                             }}>with</Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px',marginLeft: '-17px'}}>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} 
+                        sx={{ display: 'flex', flexDirection: 'row', gap: '20px',marginLeft: '-17px'}}>
                             <img
                                 src='/google.png'
                                 alt='Google'
                                 style={{
+                                    maxWidth:'100%',
                                     width: '100%',
-                                    height: '100%',
+                                    height: 'auto',
+                                    display:'flex',
                                 }} />
                             <img
                                 src='/facebook.png'
                                 alt='Facebook'
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
+                                    maxWidth:'100%',
+                                     width: '100%',
+                                    height: 'auto',
+                                    display:'flex',
                                 }} />
-                        </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </Box>
+                        </Grid>
+                    {/* </Box> */}
+                 {/* </Grid>  */}
+            {/* </Grid> */}
+</Box>
     )
 }
 

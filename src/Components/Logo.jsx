@@ -13,10 +13,11 @@ const Logo = () => {
         src="/Logo.png"
         alt="Logo"
         style={{
-          maxWidth: '100vw',
+          maxWidth: '100%',
           width: '100%',
           height: 'auto',
-          marginTop:'20px'
+          marginLeft:'20px',
+          marginTop:'10px'
         }} />
     </Box>
   )
