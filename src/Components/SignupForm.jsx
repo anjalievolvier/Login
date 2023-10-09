@@ -6,10 +6,12 @@ import {
     Button,
     InputAdornment,
     IconButton,
-    Box,
+    // Box,
     Grid,
     Select,
     MenuItem,
+    FormControl,
+    InputLabel,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -109,13 +111,21 @@ function SignupForm() {
             justifyContent="center"
             alignItems="center"
             spacing={2}
-            overflow={'hidden'}
+        overflow={'hidden'}
         >
-
-            <Box>
             <form method="POST">
 
-                <Grid item xs={12} sm={12} md={12} lg={12} display={'flex'} gap={'20px'}>
+            <Grid
+                
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    display={'flex'}
+                    gap={'20px'}
+                    flexDirection={{xs:'column',lg:'row'}} // Set initial layout direction to row
+                >
                     <TextField
                         onChange={(e) => setFirstname(e.target.value)}
                         label={
@@ -136,10 +146,11 @@ function SignupForm() {
                             borderRadius: 0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
-                            // marginTop: '20px',
                         }}
                         id="outlined-size-small"
                         size="small"
+                        // Set flex to 1 to make the width equal
+                        flex={1}
                     />
                     <TextField
                         onChange={(e) => setLastname(e.target.value)}
@@ -161,10 +172,11 @@ function SignupForm() {
                             borderRadius: 0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
-                            // marginTop: '20px',
                         }}
                         id="outlined-size-small"
                         size="small"
+                        // Set flex to 1 to make the width equal
+                        flex={1}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12} marginTop={'15px'}>
@@ -328,38 +340,34 @@ function SignupForm() {
                 </Grid>
                 <br />
                 <Grid item xs={12} sm={12} md={12} lg={12} >
-                    <Select
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Gender
-                            </Typography>
-                        }
-                        sx={{
-                            width: '100%',
-                            height: '40px',
-                            borderRadius: 0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // marginTop: '16px',
-                            // padding: '0',
-                        }}
-                    >
-                        <MenuItem value="">Select Gender</MenuItem>
-                        <MenuItem value="male">Male</MenuItem>
-                        <MenuItem value="female">Female</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
-                    </Select>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label" sx={{
+                            color: '#B4B4B4',
+                            fontFamily: 'Aleo, sans-serif',
+                            fontSize: '15px',
+                            fontStyle: 'normal',
+                            fontWeight: '400',
+                            lineHeight: 'normal',
+                        }}>Gender</InputLabel>
+                        <Select
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
+                            sx={{
+                                width: '100%',
+                                height: '40px',
+                                borderRadius: 0,
+                                border: '1px solid #736EFF',
+                                background: '#FFFCF3',
+                                // marginTop: '16px',
+                                // padding: '0',
+                            }}
+                        >
+                            <MenuItem value="">Select Gender</MenuItem>
+                            <MenuItem value="male">Male</MenuItem>
+                            <MenuItem value="female">Female</MenuItem>
+                            <MenuItem value="other">Other</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12} lg={12} >
@@ -374,20 +382,19 @@ function SignupForm() {
                             fontStyle: 'normal',
                             fontWeight: '400',
                             lineHeight: 'normal',
-                            backgroundColor:'#1B1B1B',
+                            backgroundColor: '#180E95',
                             textTransform: 'capitalize',
-                             marginTop: '15px',
+                            marginTop: '15px',
                             height: '40px',
                             borderRadius: '0',
                             width: '100%',
-                          }}
+                        }}
                     >
                         Sign up
                     </Button>
                 </Grid>
             </form>
             <Typography>{registrationMessage}</Typography>
-            </Box>
         </Grid>
     );
 }

@@ -30,7 +30,7 @@ const Login = () => {
       }}
     >
       {isMobile ? (
-        <Grid container>
+        <Grid container direction={'row-reverse'}>
           <Grid item xs={12} sm={6}>
             <BgImage />
           </Grid>
