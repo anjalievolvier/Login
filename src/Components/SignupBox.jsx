@@ -23,7 +23,7 @@ const SignupBox = () => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center', // Center align text
-            marginTop: '10px',
+            marginTop: '15px',
           }}
         >
           <Typography

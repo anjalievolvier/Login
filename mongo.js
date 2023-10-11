@@ -17,6 +17,7 @@ const newSchema = new mongoose.Schema({
         required: true,
         minlength: 8,
     },
+  
     firstname: {
         type: String,
         required: true

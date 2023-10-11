@@ -42,18 +42,16 @@ app.post("/", async (req, res) => {
 
 
 app.post("/signup", async (req, res) => {
-    const { email, password, ConfirmPassword, firstname, lastname, gender, phone } = req.body;
+    const { email, password,firstname, lastname, gender, phone } = req.body;
 
     const data = {
         email: email,
         password: password,
-        ConfirmPassword: ConfirmPassword,
         firstname: firstname,
         lastname: lastname,
         gender: gender,
         phone: phone
     };
-
     try {
         const check = await collection.findOne({ email: email });
 
