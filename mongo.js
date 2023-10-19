@@ -33,7 +33,15 @@ const newSchema = new mongoose.Schema({
     phone: {
         type: Number,
         required: true,
-    }
+    },
+    tokens: [
+        {
+            token: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
 })
 const collection = mongoose.model("collection", newSchema)
 module.exports = collection

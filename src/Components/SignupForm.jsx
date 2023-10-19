@@ -39,7 +39,7 @@ function SignupForm({ userData, onClose }) {
             setFirstname(userData.firstname);
             setLastname(userData.lastname);
             setEmail(userData.email);
-            setPassword(userData.password);
+            // setPassword(userData.password);
             setPhone(userData.phone);
             setGender(userData.gender);
         }
@@ -142,7 +142,7 @@ function SignupForm({ userData, onClose }) {
             container
             justifyContent="center"
             alignItems="center"
-            spacing={2}
+            spacing={1}
         //  overflow={'auto'}
         >
             <form method="POST">
@@ -155,9 +155,9 @@ function SignupForm({ userData, onClose }) {
                     md={12}
                     lg={12}
                     display={'flex'}
-                    gap={'20px'}
+                    gap={{xs:'10px', lg:'20px'}}
                     paddingTop={'25px'}
-                    flexDirection={{ xs: 'column', lg: 'row' }} // Set initial layout direction to row
+                    flexDirection={{ xs: 'column', md:'row',lg: 'row' }} // Set initial layout direction to row
                 >
                     <TextField
                         onChange={(e) => setFirstname(e.target.value)}
@@ -181,6 +181,7 @@ function SignupForm({ userData, onClose }) {
                             borderRadius: 0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
+                            // width:{xs:'100%',sm:'100%',md:'50%',lg:'50%',xl:'50%'}
                         }}
                         id="outlined-size-small"
                         size="small"
@@ -210,6 +211,7 @@ function SignupForm({ userData, onClose }) {
                             borderRadius: 0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
+                            // width:{xs:'100%',sm:'100%',md:'50%',lg:'50%',xl:'50%'}
                         }}
                         id="outlined-size-small"
                         size="small"
@@ -217,7 +219,9 @@ function SignupForm({ userData, onClose }) {
                         flex={1}
                     />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12} marginTop={'15px'}>
+                <Grid item xs={12} sm={12} md={12} lg={12} 
+                 marginTop={'15px'}
+                >
                     <TextField
                         onChange={(e) => setEmail(e.target.value)}
                         name="email"
@@ -256,7 +260,7 @@ function SignupForm({ userData, onClose }) {
                     <TextField
                         onChange={(e) => setPassword(e.target.value)}
                         name="password"
-                        value={password}
+                        // value={password}
                         label={
                             <Typography
                                 sx={{
@@ -274,6 +278,7 @@ function SignupForm({ userData, onClose }) {
                         sx={{
                             width: '100%',
                             borderRadius: 0,
+                            flexShrink:0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
                             // marginTop: '16px',
@@ -326,6 +331,7 @@ function SignupForm({ userData, onClose }) {
                         sx={{
                             width: '100%',
                             borderRadius: 0,
+                            flexShrink:0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',
                             // marginTop: '16px',
@@ -373,6 +379,7 @@ function SignupForm({ userData, onClose }) {
                         }
                         sx={{
                             width: '100%',
+                            flexShrink:0,
                             borderRadius: 0,
                             border: '1px solid #736EFF',
                             background: '#FFFCF3',

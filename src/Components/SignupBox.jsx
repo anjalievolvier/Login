@@ -8,9 +8,9 @@ const SignupBox = () => {
       <Box
         sx={{
           backgroundColor: '#E1E3FF',
-          maxWidth: '500px', // Set maximum width
+          maxWidth: '500px', 
           margin: '20px',
-          padding: '60px', // Add padding for spacing
+          padding: '60px', 
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -22,7 +22,7 @@ const SignupBox = () => {
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'center', // Center align text
+            justifyContent: 'center', 
             marginTop: '15px',
           }}
         >

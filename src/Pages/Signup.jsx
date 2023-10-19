@@ -39,7 +39,8 @@ const Signup = () => {
          </Grid>
       ) : (
         <Grid container>
-          <Grid item xs={12} sm={6} sx={{backgroundColor: '#180E95'}} padding={'40px'}>
+          <Grid item xs={12} sm={6} sx={{backgroundColor: '#180E95',
+        padding:{xs:'10px',sm:'10px',md:'20px',lg:'30px'}}}>
             <Logo />
             <SignupBox />
           </Grid>
