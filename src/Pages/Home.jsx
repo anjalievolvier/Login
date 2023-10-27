@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from 'react';
-
-import { useLocation } from 'react-router-dom';
-
 import { Typography, Grid, Box } from '@mui/material';
 import axios from 'axios';
 import Logo from '../Components/Logo';
 import AppBar from '@mui/material/AppBar';
 import UserDetails from '../Components/UserDetails';
 const Home = () => {
-  const location = useLocation();
-  const userId = location.state.userId;
+
+  // const location = useLocation();
+
+  // const userId = location.state.userId;
+
+
+
   const [user, setUser] = useState(null);
+
+  // const [isEditing, setIsEditing] = useState(false);
+
+  // const [editedUser, setEditedUser] = useState(null);
+
+
+  const [userId] = useState(localStorage.getItem('userId'));
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
   useEffect(() => {
     // Fetch the user details using the user ID and the authToken
     const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
+    const userId = localStorage.getItem('userId'); 
+
 
     if (userId && authToken) {
       axios
@@ -31,6 +42,7 @@ const Home = () => {
         });
     }
   }, [userId]);
+
 
   return (
     <Box>

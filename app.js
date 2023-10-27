@@ -17,7 +17,7 @@ app.get("/", cors(), (req, res) => {
 })
 
 
-
+//Login
 app.post("/", async (req, res) => {
   const { email, password } = req.body;
 
@@ -43,9 +43,7 @@ app.post("/", async (req, res) => {
           expirationDate.setHours(expirationDate.getHours() + 24);
 
           // Store the authentication string and expiration date in the user's record
-          user.authToken = authToken;
-          user.authTokenExpiration = expirationDate;
-
+          user.tokens.push({ token: authToken, expiration: expirationDate });
           await user.save();
 
           // Return the user details and the authentication string to the client
@@ -80,7 +78,7 @@ app.post("/", async (req, res) => {
 
 });
 
-
+//signup
 app.post("/signup", async (req, res) => {
   const { email, password, firstname, lastname, gender, phone } = req.body;
   try {
@@ -124,28 +122,34 @@ app.post("/signup", async (req, res) => {
   }
 
 });
+//userDetails fetching
 app.get("/user/:id", async (req, res) => {
+
   const userId = req.params.id;
+try {
 
-  try {
     // Use the userId to find the user in the MongoDB collection
-    const user = await collection.findOne({ _id: userId });
+ const user = await collection.findOne({ _id: userId });
+if (user) {
 
-    if (user) {
       // Send the user details as JSON response
-      res.json(user);
+res.json(user);
+
     } else {
+
       // If user is not found, return a 404 status and an error message
+
       res.status(404).json({ message: "User not found" });
-    }
-  } catch (e) {
+}
+} catch (e) {
+
     console.error("Error fetching user details:", e);
     res.status(500).json({ message: "Internal server error" });
+
   }
 });
-
 // Logout route
-app.post("/logout", async (req, res) => {
+  app.post("/logout", async (req, res) => {
   const { userId } = req.body;
 
   try {
@@ -153,9 +157,9 @@ app.post("/logout", async (req, res) => {
 
     if (user) {
       // Remove the authentication string and expiration date from the user's record
-      user.authToken = null;
-      user.authTokenExpiration = null;
+      user.tokens = [];
       await user.save();
+      // localStorage.removeItem('authToken');
 
       res.json({ message: "User logged out successfully" });
     } else {

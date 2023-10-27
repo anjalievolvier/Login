@@ -12,10 +12,9 @@ import SignupForm from './SignupForm';
 
 
 
+function UserDetails({ user,authToken,setAuthToken, }) {
 
-function UserDetails({ user, authToken, setAuthToken }) {
   const [isEditing, setIsEditing] = useState(false);
-  const history = useNavigate();
   const handleEditClick = () => {
 
     setIsEditing(true);
@@ -25,14 +24,46 @@ function UserDetails({ user, authToken, setAuthToken }) {
     setIsEditing(false);
   };
 
- 
 
-  const handleLogoutClick = () => {
-    // Log out the user by removing the authToken from local storage and state
-    localStorage.removeItem('authToken');
-    setAuthToken(null);
-    history('/');
+
+  const history = useNavigate();
+
+  // const handleLogoutClick = () => {
+   
+  //   history('/');
+  // }
+ 
+  const handleLogoutClick = async () => {
+    try {
+     
+      const response = await fetch("http://localhost:8000/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: user._id }),
+      });
+      
+  
+      if (response.status === 200) {
+        // Clear the token from local storage
+        localStorage.removeItem('authToken');
+        
+        // Update the authentication state to indicate the user is not authenticated
+        setAuthToken(null); 
+           
+      
+        history('/login');
+      } else {
+        // Handle the case where the logout request on the server failed
+        console.error("Logout failed on the server");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
+  
+
   return (
     <Box
       sx={{

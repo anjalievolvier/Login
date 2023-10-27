@@ -4,9 +4,6 @@ import React from 'react'
 const AltLogin = () => {
     return (
         <Box xs={12} sm={12} md={12} sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>
-            {/* <Grid container spacing={2}> */}
-                 {/* <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>  */}
-                    {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}> */}
                         <Grid item sx={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -53,9 +50,6 @@ const AltLogin = () => {
                                     display:'flex',
                                 }} />
                         </Grid>
-                    {/* </Box> */}
-                 {/* </Grid>  */}
-            {/* </Grid> */}
 </Box>
     )
 }

@@ -119,7 +119,7 @@ function SignupForm({ userData, onClose }) {
                             setRegistrationMessage("User successfully registered");
                             // Redirect after a delay
                             setTimeout(() => {
-                                history("/");
+                                history("/login");
                             }, 2000); // Delay for 2 seconds
                         }
                     })

@@ -38,10 +38,15 @@ const LoginForm = () => {
         const userId = response.data.user._id;
         const authToken = response.data.authToken;
         localStorage.setItem('authToken',authToken);
-        history('/home', { state: { userId } });
+        localStorage.setItem('userId',userId);
+       
+        //setCurrentUser(authToken);
+        history('/', { state: { userId } });
       } 
       else if (response.data === 'User does not exist') {
         alert('User has not signed up');
+      } else{
+        alert('Wrong details');
       }
     } catch (error) {
       alert('Wrong details');

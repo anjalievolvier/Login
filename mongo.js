@@ -34,11 +34,15 @@ const newSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    tokens: [
+     tokens: [
         {
             token: {
                 type: String,
-                required: true,
+                // required: true,
+            },
+            expiration: {
+                type: Date,
+                // required: true,
             },
         },
     ],
