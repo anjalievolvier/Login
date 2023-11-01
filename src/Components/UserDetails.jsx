@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Typography, Box, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -10,6 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import SignupForm from './SignupForm';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 
 
@@ -18,8 +19,13 @@ function UserDetails({ user, authToken, setAuthToken, }) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [imagePath, setImagePath] = useState(null);
+const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '');
 
-  
+  useEffect(() => {
+    let imageUrl = imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '';
+    setImageUrl(imageUrl);
+  }, [imagePath, user.imagePath]);
+
 
   const handleEditClick = () => {
 
@@ -95,9 +101,11 @@ console.log('avatar',selectedAvatar);
           // body: JSON.stringify({ userId: user._id }),
         });
 
+        console.log("response ::: ", response)
+
 
         if (response.status === 200) {
-          setImagePath(response.data.imagePath);
+          setImagePath(response.data.imageUrl);
           console.log('path',imagePath);
           // console.log('path',response.data.imagePath);
           console.log('Image uploaded successfully');
@@ -115,6 +123,55 @@ console.log('avatar',selectedAvatar);
 
   console.log(user);
   console.log('imagepath',user.imagePath);
+  // let imageUrl=(imagePath ?imagePath:user.imagePath[0].url);
+  // let imageUrl = imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '';
+
+  console.log("imageUrl :::: ", imageUrl, imagePath)
+  
+  const handleDeleteProfilePicture = async () => {
+    try {
+      const response = await axios.delete('http://localhost:8000/deleteimage', {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        data: { userId: user._id },
+      });
+  
+      if (response.status === 200) {
+        // Picture deleted successfully
+        setImageUrl(null); // Set the image URL to null
+      } else {
+        // Handle errors
+        console.error('Profile picture deletion failed on the server');
+      }
+    } catch (error) {
+      console.error('Error during profile picture deletion:', error);
+    }
+  };
+  
+
+  // const handleDeleteProfilePicture = async () => {
+  //   try {
+  //     const response = await axios.delete('http://localhost:8000/deleteimage', {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`,
+  //       },
+  //       data: { userId: user._id }, // Pass the userId in the request body
+  //     });
+  
+  //     if (response.status === 200) {
+  //       // Picture deleted successfully
+  //       setImagePath(null); // Set the image path to null
+  //     } else {
+  //       // Handle errors
+  //       console.error('Profile picture deletion failed on the server');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during profile picture deletion:', error);
+  //   }
+  // };
+  
+
   return (
     <Box
       sx={{
@@ -134,38 +191,18 @@ console.log('avatar',selectedAvatar);
       {/* <Grid container sx={{ padding: '30px',display:'flex',flexWrap:'wrap' }}> */}
       <Box display={'flex'} flexDirection={{ xs: 'column', sm: 'column', md: 'row', lg: 'row', xl: 'row' }} gap={'20px'}>
         <Box>
-          {/* {selectedAvatar ? (
-            // Display the selected avatar
-            <Avatar src={URL.createObjectURL(selectedAvatar)} sx={{ width: '150px', height: '150px', fontSize: '50px', }} />
-          ) : (
-            // Display the user's avatar
-            <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px', backgroundColor: '#180E95' }}>
-              {user.firstname.charAt(0).toUpperCase() + user.lastname.charAt(0).toUpperCase()}
-            </Avatar>
-          )} */}
-          {/* {imagePath ? (
+              {imageUrl ? (
               
-              // Display the uploaded avatar
-              <Avatar src={user.imagePath[0].url} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
-            ) : (
-              // Display the user's avatar
-              <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px' }}>
-                {user.firstname.charAt(0).toUpperCase() + user.lastname.charAt(0).toUpperCase()}
-              </Avatar> )} */}
-              {user.imagePath && user.imagePath.length > 0 ? (
-              
-              // Display the uploaded avatar
-              // <Avatar src={user.imagePath[0].url} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
-              <Avatar src={`${user.imagePath[0].url}?${new Date().getTime()}`} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
-            
+               // Display the uploaded avatar 
+              <Avatar src={`${imageUrl}?${new Date().getTime()}`} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
               
             
-            ) : (
+             ) : (
               // Display the user's avatar
-              <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px' }}>
+              <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px' , background:'#180E95'}}>
                 {user.firstname.charAt(0).toUpperCase() + user.lastname.charAt(0).toUpperCase()}
-              </Avatar> )}
-                    
+              </Avatar> )} 
+                
           <input
             type="file"
             accept="image/*"
@@ -185,9 +222,7 @@ console.log('avatar',selectedAvatar);
                 height: '30px',
                 backgroundColor: '#0E9B9',
                 borderRadius: '50%',
-                // position: 'absolute',
-                // bottom: '5px',
-                // right: '5px',
+                
                 cursor: 'pointer',
               }}
             >
@@ -197,15 +232,22 @@ console.log('avatar',selectedAvatar);
                   fontSize: '20px',
                   fontWeight: 'bold',
 
-                }}
-              //onClick={handleUploadImage}
-              // onClick={handleAvatarChangeAndUpload}
-              //style={{ cursor: selectedAvatar ? 'pointer' : 'not-allowed' }}
-              >
+                }}>
                 <AddAPhotoIcon />
               </span>
             </div>
           </label>
+          <Button
+  variant="outlined"
+  onClick={handleDeleteProfilePicture}
+  sx={{
+    color: 'black', 
+    // lineHeight: 'normal',
+     border: 'none',
+  }}
+>
+  <DeleteIcon />
+</Button>  
         </Box>
 
 
@@ -262,22 +304,6 @@ console.log('avatar',selectedAvatar);
           </Typography>
         </Box>
       </Box>
-      {/* <Button
-          onClick={handleProfilePictureUpload}
-          sx={{
-            color: '#202020',
-            fontFamily: 'Aleo, sans-serif',
-            fontSize: '14px',
-            fontStyle: 'normal',
-            fontWeight: '600',
-            lineHeight: 'normal',
-            textTransform: 'capitalize',
-            border: '2px solid #000',
-            marginBottom: '10px',
-          }}
-        >
-          Upload Profile Picture
-        </Button> */}
       <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'} gap={'10px'}
         sx={{ marginTop: { xs: '20px', sm: '20px' } }}>
         <Button onClick={handleEditClick}
