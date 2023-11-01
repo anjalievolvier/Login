@@ -3,15 +3,19 @@ const collection = require("./mongo")
 const cors = require("cors")
 const app = express()
 const bcrypt = require("bcrypt");
-
 const crypto = require('crypto');
+// const multer = require("multer"); // Import multer for handling file uploads
+const path = require("path");
+const fileUpload = require('express-fileupload');
+
+// const fs = require("fs");
+// const { promisify } = require("util");
+app.use(fileUpload());
+
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
-
-// const tokenLength = 25; // Customize this as needed
-
-
 app.get("/", cors(), (req, res) => {
 
 })
@@ -90,9 +94,6 @@ app.post("/signup", async (req, res) => {
     }
     else {
 
-      // console.log("User registered:");
-      // res.json( "not exist");
-      // await collection.insertMany([data]);
       // Hash the password before saving it
       bcrypt.hash(password, 10, async (err, hashedPassword) => {
         if (err) {
@@ -126,22 +127,22 @@ app.post("/signup", async (req, res) => {
 app.get("/user/:id", async (req, res) => {
 
   const userId = req.params.id;
-try {
+  try {
 
     // Use the userId to find the user in the MongoDB collection
- const user = await collection.findOne({ _id: userId });
-if (user) {
+    const user = await collection.findOne({ _id: userId });
+    if (user) {
 
       // Send the user details as JSON response
-res.json(user);
+      res.json(user);
 
     } else {
 
       // If user is not found, return a 404 status and an error message
 
       res.status(404).json({ message: "User not found" });
-}
-} catch (e) {
+    }
+  } catch (e) {
 
     console.error("Error fetching user details:", e);
     res.status(500).json({ message: "Internal server error" });
@@ -149,7 +150,7 @@ res.json(user);
   }
 });
 // Logout route
-  app.post("/logout", async (req, res) => {
+app.post("/logout", async (req, res) => {
   const { userId } = req.body;
 
   try {
@@ -196,6 +197,65 @@ app.put("/user/:id", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+// Define the route for uploading user avatars
+
+const permanentUploadsPath = path.join(__dirname, 'uploads');
+
+app.post('/uploadimage', async (req, res) => {
+  console.log('server');
+  const { userId } = req.body;
+  const user = await collection.findOne({ _id: userId });
+  if (user) {
+    // console.log('insideuser');
+
+    if (!req.files || !req.files.image) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const uploadedImage = req.files.image;
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const imagePath = path.join(permanentUploadsPath, uniqueSuffix + uploadedImage.name);
+    // user.imagePath.push({
+    //   url: imagePath,});
+    //   await user.save();
+
+
+    // Move the uploaded image to the permanent location
+    uploadedImage.mv(imagePath, (err) => {
+
+      if (err) {
+        console.error('Error while saving the file:', err);
+        return res.status(500).json({ error: 'Error while saving the file', details: err.message });
+      }
+
+      const imageUrl = `http://localhost:8000/uploads/${uniqueSuffix + uploadedImage.name}`;
+
+      // Update the user's image path with the URL
+      user.imagePath.unshift({
+        url: imageUrl,
+      });
+
+      // Save the user with the updated image path
+      user.save();
+
+      console.log('Image uploaded successfully');
+      return res.status(200).json({ message: 'Image uploaded successfully', imagePath });
+    });
+  }
+  else {
+    res.status(404).json({ message: "User not found" });
+  }
+}
+
+
+
+);
+// Serve uploaded images
+app.use('/uploads', express.static(permanentUploadsPath));
+
+
 
 
 app.listen(8000, () => {

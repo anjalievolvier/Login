@@ -42,10 +42,16 @@ const newSchema = new mongoose.Schema({
             },
             expiration: {
                 type: Date,
-                // required: true,
+                // required: true,A
             },
         },
     ],
+    imagePath: [
+        { 
+            url:{
+                type: String,
+            }
+        }],
 })
 const collection = mongoose.model("collection", newSchema)
 module.exports = collection
