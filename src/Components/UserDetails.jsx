@@ -129,6 +129,7 @@ console.log('avatar',selectedAvatar);
   console.log("imageUrl :::: ", imageUrl, imagePath)
   
   const handleDeleteProfilePicture = async () => {
+    alert("Do you want to remove Profile picture ?")
     try {
       const response = await axios.delete('http://localhost:8000/deleteimage', {
         headers: {

@@ -1,5 +1,7 @@
 const express = require("express")
-const collection = require("./mongo")
+// const collection = require("./mongo")
+// const post = require('./mongo'); 
+const mongo = require("./mongo")
 const cors = require("cors")
 const app = express()
 const bcrypt = require("bcrypt");
@@ -26,7 +28,7 @@ app.post("/", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await collection.findOne({ email: email });
+    const user = await mongo.collection.findOne({ email: email });
 
 
     if (user) {
@@ -86,7 +88,7 @@ app.post("/", async (req, res) => {
 app.post("/signup", async (req, res) => {
   const { email, password, firstname, lastname, gender, phone } = req.body;
   try {
-    const check = await collection.findOne({ email: email });
+    const check = await mongo.collection.findOne({ email: email });
 
     if (check) {
       console.log("User already exists");
@@ -99,7 +101,8 @@ app.post("/signup", async (req, res) => {
         if (err) {
           console.error("Error hashing password:", err);
           res.status(500).json({ message: "Internal server error" });
-        } else {
+        } 
+        else {
           const data = {
             email: email,
             password: hashedPassword, // Save the hashed password
@@ -109,10 +112,14 @@ app.post("/signup", async (req, res) => {
             phone: phone
           };
 
+          // const newUser = new collection(data);
+          // await newUser.save();
+
           console.log("User registered:");
           res.json("not exist");
-          await collection.insertMany([data]);
+          await mongo.collection.insertMany([data]);
         }
+        
       });
     }
 
@@ -130,7 +137,7 @@ app.get("/user/:id", async (req, res) => {
   try {
 
     // Use the userId to find the user in the MongoDB collection
-    const user = await collection.findOne({ _id: userId });
+    const user = await mongo.collection.findOne({ _id: userId });
     if (user) {
 
       // Send the user details as JSON response
@@ -154,7 +161,7 @@ app.post("/logout", async (req, res) => {
   const { userId } = req.body;
 
   try {
-    const user = await collection.findOne({ _id: userId });
+    const user = await mongo.collection.findOne({ _id: userId });
 
     if (user) {
       // Remove the authentication string and expiration date from the user's record
@@ -179,7 +186,7 @@ app.put("/user/:id", async (req, res) => {
 
   try {
     // Use MongoDB update methods (e.g., findOneAndUpdate) to update the user
-    const updatedUserData = await collection.findOneAndUpdate(
+    const updatedUserData = await mongo.collection.findOneAndUpdate(
       { _id: userId },
       { $set: updatedUser },
       { new: true } // Return the updated user data
@@ -206,7 +213,7 @@ const permanentUploadsPath = path.join(__dirname, 'uploads');
 app.post('/uploadimage', async (req, res) => {
   console.log('server');
   const { userId } = req.body;
-  const user = await collection.findOne({ _id: userId });
+  const user = await mongo.collection.findOne({ _id: userId });
   if (user) {
     // console.log('insideuser');
 
@@ -262,7 +269,7 @@ app.delete('/deleteimage', async (req, res) => {
   const userId = req.body.userId;
 
   try {
-    const user = await collection.findOne({ _id: userId });
+    const user = await mongo.collection.findOne({ _id: userId });
 
     if (user) {
       if (user.imagePath && user.imagePath.length > 0) {
@@ -291,6 +298,104 @@ app.delete('/deleteimage', async (req, res) => {
   } catch (error) {
     console.error('Error deleting profile picture:', error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//create post
+
+// Define a route for creating a new post
+app.post('/posts', async (req, res) => {
+  // console.log('inside post server');
+  const { userId, caption } = req.body;
+  const user = await mongo.collection.findOne({ _id: userId });
+
+  if (user) {
+    // console.log('inside user');
+    if (!req.files || !req.files.image) {
+      const newPost = new mongo.post({
+        username: user.firstname,
+        user: userId,
+        caption: caption,
+        images: [], // Empty array for images since there is no image
+      });
+      console.log('Text:',newPost);
+      // console.log('help');
+      // return res.status(400).json({ message: 'Both content and image are required' });
+
+      newPost.save()
+        .then((savedPost) => {
+          res.status(200).json({ message: 'New post created successfully', savedPost: savedPost });
+        })
+        .catch((err) => {
+          console.error('Error creating a new post:', err);
+          res.status(500).json({ message: 'Error creating a new post' });
+        });
+      
+    }
+    else{
+   
+    const uploadedImage = req.files.image;
+    console.log('uploadimage:',uploadedImage);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const imagePath = path.join(__dirname, 'uploads', uniqueSuffix + uploadedImage.name);
+    console.log('imagepath');
+
+    // Move the uploaded image to the permanent location
+    uploadedImage.mv(imagePath, (err) => {
+      if (err) {
+        console.error('Error while saving the file:', err);
+        return res.status(500).json({ error: 'Error while saving the file', details: err.message });
+      }
+
+      // Construct the URL of the uploaded image
+      const imageUrl = `http://localhost:8000/uploads/${uniqueSuffix + uploadedImage.name}`;
+
+      // Remove the existing imagePath (if any)
+      user.imagePath = [];
+
+      // Create a new post and save it to MongoDB
+      const newPost = new mongo.post({
+        username:user.firstname,
+        user: userId,
+        caption:caption,
+        images: [
+          {
+            url: imageUrl,
+            description: 'Description for the uploaded image',
+          },
+        ],
+      });
+      newPost.save()
+  .then((savedPost) => {
+    console.log('success');
+    res.status(200).json({ message: 'New post created successfully', savedPost: savedPost });
+  })
+  .catch((err) => {
+    console.error('Error creating a new post:', err);
+    res.status(500).json({ message: 'Error creating a new post' });
+  });
+    });
+  }
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+});
+
+  //Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+// Fetch all posts
+app.get('/fetchposts/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const posts = await mongo.post.find({ user: userId });
+  if(posts){
+    res.status(200).json({ posts });
+}
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ message: 'Error fetching posts' });
   }
 });
 
