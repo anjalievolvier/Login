@@ -1,143 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import Link from react-router-dom
+import React from 'react';
+import { Link } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import Caption from '../Components/Caption';
+import Logo from '../Components/Logo';
+import AppBar from '@mui/material/AppBar';
+import { Box,Grid } from '@mui/material';
+// import Post from '../Components/Post';
+import Search from '../Components/Search';
 
-
-function Feed () {
-  const location = useLocation();
-  const userId = location.state.userId;
-  const [image, setImage] = useState(null);
-  const [caption, setCaption] = useState('');
-  const [pic, setPic] = useState(null);
-  const [posts, setPosts] = useState([]);
-
-
-
-   const handleImageUpload = (file) => {
-    console.log('File received:', file);
-    setPic(URL.createObjectURL(file));
-    setImage(file);
-  };
- 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   formData.append('userId', userId);
-  //   formData.append('image', image);
-  //   if(caption){
-  //   formData.append('caption', caption);
-  //   }
-
-  //   const response = await fetch('http://localhost:8000/posts', {
-  //     method: 'POST',
-  //     body: formData,
-  //   });
-
-  //   if (response.status === 200) {
-  //     const responseData = await response.json();
-  //     console.log('successfully posted');
-  //     console.log('Saved Post:', responseData.savedPost);
-  //      // Reset the state to clear the selected image
-  //   setImage(null);
-  //   setPic(null);
-  //   //setContent(''); // You can reset the content as well if needed
-  //   setCaption('')
-  //   } else {
-  //     console.error('error in posting');
-  //   }
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('userId', userId);
-  
-    if (image) {
-      formData.append('image', image);
-    }
-  
-    if (caption) {
-      formData.append('caption', caption);
-    }
-  
-    const response = await fetch('http://localhost:8000/posts', {
-      method: 'POST',
-      body: formData,
-    });
-  
-    if (response.status === 200) {
-      const responseData = await response.json();
-      console.log('Successfully posted');
-      console.log('Saved Post:', responseData.savedPost);
-      setImage(null);
-      setPic(null);
-      setCaption('');
-    } else {
-      console.error('Error in posting');
-    }
-  };
-  
-
-
-  useEffect(() => {
-    // Fetch posts from the server when the component mounts
-    const fetchPosts = async () => {
-      const response = await fetch(`http://localhost:8000/fetchposts/${userId}`); // Replace with your actual API endpoint
-      if (response.status === 200) {
-        const postData = await response.json();
-        setPosts(postData.posts); // Assuming the server returns an array of posts
-      } else {
-        console.error('Error fetching posts');
-      }
-    };
-    fetchPosts();
-  }, [userId]); // The empty dependency array ensures this effect runs only once
-
-
+function Feed() {
+  // const location = useLocation();
+  // const userId = location.state.userId;
   return (
-    <div>
-      <form encType="multipart/form-data" onSubmit={handleSubmit}>
-     
-  <br/>
-  <br/>
-        <input
-          type="text"
-          placeholder="Enter your caption"
-          //value={content}
-          //onChange={(e) => setContent(e.target.value)}
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageUpload(e.target.files[0])}
-        />
-        <br />
-        {image && <img src={pic} alt="Selected" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
-        <br />
-        <button type="submit">Post</button>
-        <Link to="/home">
-          <button type="submit">Home</button>
-        </Link>
+    
+    <Box>
+      <form encType="multipart/form-data" >   
+      <AppBar position="static" sx={{ backgroundColor: '#180E95', padding: '20px' }}>
+        <Logo />
+         <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }}>
+          <Link to='/home'>
+            <HomeIcon style={{ color: 'white' }} />
+          </Link>
+        </Box>
+      </AppBar>
+      <Grid container
+        sx={{
+          display: "flex",
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingLeft:{xs:'50px',sm:'100px',md:'200px', lg:'300px',xl:'400px'},
+          paddingRight:{xs:'50px',sm:'100px',md:'200px',lg:'300px',xl:'400px'},
+        }}
+      >
+        <Search/>
+        <Caption />
+      </Grid>
       </form>
-      <br />
 
-      <div>
-  {posts && posts.map((post) => (
-    <div key={post._id}>
-      {post.images && post.images[0] && post.images[0].url ? (
-        <img src={post.images[0].url} alt="Posted" style={{ maxWidth: '200px', maxHeight: '200px' }} />
-      ) : null}
-      <p>{post.caption}</p>
-    </div>
-  ))}
-</div>
-</div>
+    </Box>
+   
+
   );
 }
 
-
 export default Feed;
-

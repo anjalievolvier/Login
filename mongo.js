@@ -52,6 +52,12 @@ const newSchema = new mongoose.Schema({
                 type: String,
             }
         }],
+        followlist: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'collection', // Reference to the 'collection' model (your User model)
+            },
+          ],
 })
 const collection = mongoose.model("collection", newSchema)
 
@@ -64,7 +70,7 @@ const postSchema = new mongoose.Schema({
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'collection', // Reference to the user who created the post
+       ref: 'collection', // Reference to the user who created the post
       required: true,
     },
 
@@ -72,7 +78,7 @@ const postSchema = new mongoose.Schema({
     //   type: String,
     // //   required: true,
     // },
-    caption: {
+    text: {
         type: String,
         //  required: true,
     },
@@ -87,6 +93,14 @@ const postSchema = new mongoose.Schema({
         },
       },
     ],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+      createdMonth: {
+        type: String,
+        default: new Date().toLocaleString('default', { month: 'long' }),
+      },
   });
   
   const post = mongoose.model('post', postSchema);

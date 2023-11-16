@@ -19,7 +19,7 @@ function UserDetails({ user, authToken, setAuthToken, }) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [imagePath, setImagePath] = useState(null);
-const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '');
+  const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '');
 
   useEffect(() => {
     let imageUrl = imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '';
@@ -28,7 +28,6 @@ const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath
 
 
   const handleEditClick = () => {
-
     setIsEditing(true);
 
   };
@@ -37,16 +36,7 @@ const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath
     setIsEditing(false);
   };
 
-  // const handleAvatarChange = (event) => {
-  //   // Capture the selected image file
-  //   const file = event.target.files[0];
-  //   setSelectedAvatar(file);
-  // };
-
-
-
-
-   const history = useNavigate();
+  const history = useNavigate();
 
 
   const handleLogoutClick = async () => {
@@ -87,9 +77,9 @@ const [imageUrl, setImageUrl] = useState(imagePath ? imagePath : (user.imagePath
       // console.log('inside');
       const file = event.target.files[0];
       setSelectedAvatar(file);
-console.log('avatar',selectedAvatar);
+      console.log('avatar', selectedAvatar);
       const formData = new FormData();
-      formData.append('image', file); 
+      formData.append('image', file);
       formData.append('userId', user._id);
       try {
         // console.log('inside try');
@@ -106,7 +96,7 @@ console.log('avatar',selectedAvatar);
 
         if (response.status === 200) {
           setImagePath(response.data.imageUrl);
-          console.log('path',imagePath);
+          console.log('path', imagePath);
           // console.log('path',response.data.imagePath);
           console.log('Image uploaded successfully');
         } else {
@@ -122,12 +112,10 @@ console.log('avatar',selectedAvatar);
   };
 
   console.log(user);
-  console.log('imagepath',user.imagePath);
-  // let imageUrl=(imagePath ?imagePath:user.imagePath[0].url);
-  // let imageUrl = imagePath ? imagePath : (user.imagePath && user.imagePath[0] && user.imagePath[0].url) || '';
+  console.log('imagepath', user.imagePath);
 
   console.log("imageUrl :::: ", imageUrl, imagePath)
-  
+
   const handleDeleteProfilePicture = async () => {
     alert("Do you want to remove Profile picture ?")
     try {
@@ -137,7 +125,7 @@ console.log('avatar',selectedAvatar);
         },
         data: { userId: user._id },
       });
-  
+
       if (response.status === 200) {
         // Picture deleted successfully
         setImageUrl(null); // Set the image URL to null
@@ -149,35 +137,11 @@ console.log('avatar',selectedAvatar);
       console.error('Error during profile picture deletion:', error);
     }
   };
-  
 
-  // const handleDeleteProfilePicture = async () => {
-  //   try {
-  //     const response = await axios.delete('http://localhost:8000/deleteimage', {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //       },
-  //       data: { userId: user._id }, // Pass the userId in the request body
-  //     });
-  
-  //     if (response.status === 200) {
-  //       // Picture deleted successfully
-  //       setImagePath(null); // Set the image path to null
-  //     } else {
-  //       // Handle errors
-  //       console.error('Profile picture deletion failed on the server');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during profile picture deletion:', error);
-  //   }
-  // };
-  
 
   return (
     <Box
       sx={{
-        // gap:'60px',
-        // margin:'10px',   
         borderRadius: '20px',
         border: '5px solid #180E95',
         background: '#FFF',
@@ -189,21 +153,20 @@ console.log('avatar',selectedAvatar);
         alignItems: { xs: 'center', sm: 'center' },
         padding: '20px',
       }}>
-      {/* <Grid container sx={{ padding: '30px',display:'flex',flexWrap:'wrap' }}> */}
       <Box display={'flex'} flexDirection={{ xs: 'column', sm: 'column', md: 'row', lg: 'row', xl: 'row' }} gap={'20px'}>
         <Box>
-              {imageUrl ? (
-              
-               // Display the uploaded avatar 
-              <Avatar src={`${imageUrl}?${new Date().getTime()}`} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
-              
-            
-             ) : (
-              // Display the user's avatar
-              <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px' , background:'#180E95'}}>
-                {user.firstname.charAt(0).toUpperCase() + user.lastname.charAt(0).toUpperCase()}
-              </Avatar> )} 
-                
+          {imageUrl ? (
+
+            // Display the uploaded avatar 
+            <Avatar src={`${imageUrl}?${new Date().getTime()}`} sx={{ width: '150px', height: '150px', fontSize: '50px' }} />
+
+
+          ) : (
+            // Display the user's avatar
+            <Avatar sx={{ width: '150px', height: '150px', fontSize: '50px', background: '#180E95' }}>
+              {user.firstname.charAt(0).toUpperCase() + user.lastname.charAt(0).toUpperCase()}
+            </Avatar>)}
+
           <input
             type="file"
             accept="image/*"
@@ -223,7 +186,7 @@ console.log('avatar',selectedAvatar);
                 height: '30px',
                 backgroundColor: '#0E9B9',
                 borderRadius: '50%',
-                
+
                 cursor: 'pointer',
               }}
             >
@@ -239,16 +202,16 @@ console.log('avatar',selectedAvatar);
             </div>
           </label>
           <Button
-  variant="outlined"
-  onClick={handleDeleteProfilePicture}
-  sx={{
-    color: 'black', 
-    // lineHeight: 'normal',
-     border: 'none',
-  }}
->
-  <DeleteIcon />
-</Button>  
+            variant="outlined"
+            onClick={handleDeleteProfilePicture}
+            sx={{
+              color: 'black',
+              // lineHeight: 'normal',
+              border: 'none',
+            }}
+          >
+            <DeleteIcon />
+          </Button>
         </Box>
 
 
