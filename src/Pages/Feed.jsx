@@ -57,7 +57,7 @@ function Feed() {
 
     <Box>
       <form encType="multipart/form-data" >
-        <AppBar position="static" sx={{ backgroundColor: '#180E95', padding: '20px' }}>
+        <AppBar position="static" sx={{ backgroundColor: '#180E95', padding: '10px' }}>
           <Logo />
           <Box
             sx={{
@@ -79,9 +79,9 @@ function Feed() {
             paddingRight: { xs: '50px', sm: '100px', md: '200px', lg: '300px', xl: '400px' },
           }}
         >
-          <Search user={user} />
+          <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
-          <Post user={user} posts={posts} fetchPosts={fetchPosts} />
+          <Post user={user} posts={posts}  />
         </Grid>
       </form>
 

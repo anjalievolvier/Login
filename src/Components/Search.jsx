@@ -3,7 +3,7 @@ import { TextField, Typography, Grid, Box, InputAdornment, Button } from '@mui/m
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 
-const Search = (user) => {
+const Search = ({ user, fetchPosts }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   //   const [userId] = useState(localStorage.getItem('userId'));
@@ -36,42 +36,13 @@ const Search = (user) => {
     });//otherUserId represents the ID of the user that you want to follow.
     if (response.status === 200) {
       console.log('successfully followed user');
+      fetchPosts()
+      setSearchResults(null);
     } else {
       console.error('Error following users');
     }
     ;
-  }
-  // const handleFollow = async (otherUserId) => {
-  //   try {
-  //     // Check if the other user is the logged-in user
-  //     if (otherUserId === userId) {
-  //       console.log("You cannot follow yourself.");
-  //       return;
-  //     }
-  
-  //     // You can check if the user is already following the other user on the client side
-  //     if (user.followlist.includes(otherUserId)) {
-  //       console.log("You are already following this user.");
-  //       // Display "Friend" button or any other appropriate UI
-  //       return;
-  //     }
-  
-  //     // If not following and not yourself, send a request to follow the user
-  //     const response = await fetch(`http://localhost:8000/users/follow/${userId}/${otherUserId}`, {
-  //       method: 'POST',
-  //     });
-  
-  //     if (response.status === 200) {
-  //       console.log('Successfully followed user');
-  //       // You can update the UI to display "Friend" button or any other appropriate UI
-  //     } else {
-  //       console.error('Error following user');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error following user:', error);
-  //   }
-  // };
-  
+  }  
   return (
     <Grid container marginBottom={'20px'}>
       <TextField
@@ -108,7 +79,7 @@ const Search = (user) => {
         }}>
 
       </TextField>
-      {searchResults.map((user) => (
+      {searchResults?.map((user) => (
 
         <Box key={user._id}
           sx={{
