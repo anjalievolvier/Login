@@ -381,34 +381,6 @@ app.post('/posts', async (req, res) => {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-// ///////////fetch post of user and users friend post
-// app.get('/fetchposts/:userId', async (req, res) => {
-//   const userId = req.params.userId;
-
-//   try {
-//     // Find the logged-in user
-//     const user = await mongo.collection.findOne({ _id: userId });
-
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     // Find posts for the logged-in user
-//     const userPosts = await mongo.post.find({ user: userId }).populate('user');
-
-//     // Find posts for users in the user's followlist
-//     const followedPosts = await mongo.post.find({ user: { $in: user.followlist } }).populate('user');
-
-//     // Combine and sort the posts by timestamp (you may need to adjust the schema for timestamps)
-//     const allPosts = [...userPosts, ...followedPosts].sort((a, b) => b.timestamp - a.timestamp);
-
-//     res.status(200).json({posts: allPosts,user:user});
-//   } catch (error) {
-//     console.error('Error fetching posts for the feed:', error);
-//     res.status(500).json({ message: 'Error fetching posts for the feed' });
-//   }
-// });
-
 app.get('/fetchposts/:userId', async (req, res) => {
   const userId = req.params.userId;
 

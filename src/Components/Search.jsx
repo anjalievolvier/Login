@@ -3,7 +3,7 @@ import { TextField, Typography, Grid, Box, InputAdornment, Button } from '@mui/m
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 
-const Search = () => {
+const Search = (user) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   //   const [userId] = useState(localStorage.getItem('userId'));
@@ -27,8 +27,7 @@ const Search = () => {
 
   ////////////////////////////handle follow
   // const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
-  const userId = localStorage.getItem('userId');
-  // if (userId && authToken) {
+  const userId= localStorage.getItem('userId');
   const handleFollow = async (otherUserId) => {
     // You'll need to send a request to your server to update the user's follow list.
     console.log('inside handleFollow client');
@@ -42,6 +41,37 @@ const Search = () => {
     }
     ;
   }
+  // const handleFollow = async (otherUserId) => {
+  //   try {
+  //     // Check if the other user is the logged-in user
+  //     if (otherUserId === userId) {
+  //       console.log("You cannot follow yourself.");
+  //       return;
+  //     }
+  
+  //     // You can check if the user is already following the other user on the client side
+  //     if (user.followlist.includes(otherUserId)) {
+  //       console.log("You are already following this user.");
+  //       // Display "Friend" button or any other appropriate UI
+  //       return;
+  //     }
+  
+  //     // If not following and not yourself, send a request to follow the user
+  //     const response = await fetch(`http://localhost:8000/users/follow/${userId}/${otherUserId}`, {
+  //       method: 'POST',
+  //     });
+  
+  //     if (response.status === 200) {
+  //       console.log('Successfully followed user');
+  //       // You can update the UI to display "Friend" button or any other appropriate UI
+  //     } else {
+  //       console.error('Error following user');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error following user:', error);
+  //   }
+  // };
+  
   return (
     <Grid container marginBottom={'20px'}>
       <TextField
@@ -131,6 +161,7 @@ const Search = () => {
 
               }}> {user.email}</Typography>
             </Box>
+            {userId!==user._id &&(
             <Button variant="outlined" onClick={() => handleFollow(user._id)} sx={{
               color: '#202020',
               fontFamily: 'Aleo, sans-serif',
@@ -141,7 +172,25 @@ const Search = () => {
               textTransform: 'capitalize',
               border: '1px solid black',
             }}>Follow</Button>
-
+            )}
+            {/* {userId !== user._id && (
+              <Button
+                variant="outlined"
+                onClick={() => handleFollow(user._id)}
+                sx={{
+                  color: '#202020',
+                  fontFamily: 'Aleo, sans-serif',
+                  fontSize: '15px',
+                  fontStyle: 'normal',
+                  fontWeight: '600',
+                  lineHeight: 'normal',
+                  textTransform: 'capitalize',
+                  border: '1px solid black',
+                }}
+              >
+                {user.followlist.includes(user._id) ? 'Friend' : 'Follow'}
+              </Button>
+            )} */}
           </Box>
 
 

@@ -1,26 +1,24 @@
-import { Box, Grid, TextField} from '@mui/material';
+import { Box, Grid, TextField } from '@mui/material';
 import { Button } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-import Post from './Post';
+import React, { useState } from 'react';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
-function Caption() {
+function Caption({ user, fetchPosts }) {
     const [image, setImage] = useState(null);
     const [text, setText] = useState('');
-    const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState(null);
+
     const [userId] = useState(localStorage.getItem('userId'));
-    // const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
     const [selectImage, setSelectImage] = useState(null);
     const [isImageSelected, setIsImageSelected] = useState(false);
-  
+
 
     const handleImageChange = (event) => {
         const selectedImage = event.target.files[0];
         setImage(selectedImage);
         setSelectImage(URL.createObjectURL(selectedImage));
         setIsImageSelected(true);
-      };
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('inside submit');
@@ -43,6 +41,10 @@ function Caption() {
         if (response.status === 200) {
             const responseData = await response.json();
             console.log('successfully posted');
+            fetchPosts();
+            setImage(null);
+            setSelectImage(null);
+            setIsImageSelected(false);
             console.log('Saved Post:', responseData.savedPost);
             console.log('User Data:', responseData.user);
             //setUser(responseData.user);
@@ -57,39 +59,16 @@ function Caption() {
         }
 
     };
-    useEffect(() => {
-        const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
-        const userId = localStorage.getItem('userId');
-        if (userId && authToken) {
 
-            // Fetch posts from the server when the component mounts
-            const fetchPosts = async () => {
-                const response = await fetch(`http://localhost:8000/fetchposts/${userId}`); // Replace with your actual API endpoint
-                if (response.status === 200) {
-                    //const postData = await response.json();
-                    //setPosts(postData.posts); // Assuming the server returns an array of posts
-                    const responseData = await response.json();
-                    setPosts(responseData.posts); // Assuming the server returns an array of posts
-                    setUser(responseData.user);
-                    // console.log('posts:',posts);
-                } else {
-                    console.error('Error fetching posts');
-                }
-            };
-            fetchPosts();
+    const handleRemoveImage = async () => {
+
+        const confirmRemove = window.confirm('Do you want to delete the image?');
+
+        if (confirmRemove) {
+            setImage(null);
+            setSelectImage(null);
+            setIsImageSelected(false);
         }
-    }, []);
-    const handleRemoveImage = async () =>
-    { 
-    
-    const confirmRemove = window.confirm('Do you want to delete the image?');
-  
-    if (confirmRemove) {
-      // Reset the state values related to the image
-      setImage(null);
-      setSelectImage(null);
-      setIsImageSelected(false);
-    }
     }
     console.log('userdetails in caption', user);
     return (
@@ -99,9 +78,9 @@ function Caption() {
                     display: 'flex',
                     flexDirection: 'column',
                     boxShadow: 4,
-                     p: 3,
+                    p: 3,
                     borderRadius: '20px',
-                    width:'100%',
+                    width: '100%',
                     margin: '0 auto',
                 }}
             >
@@ -111,10 +90,10 @@ function Caption() {
                     placeholder="Type something"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    // backgroundColor='#DEDEDE'
-                    // borderRadius='3px'
+                // backgroundColor='#DEDEDE'
+                // borderRadius='3px'
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
                     <label htmlFor="imageInput">
                         <img
@@ -136,28 +115,28 @@ function Caption() {
                         onChange={handleImageChange}
                     />
                     {isImageSelected && (
-              <Box sx={{ display: 'flex', alignItems: 'flex-end', position: 'relative',marginRight:'480px' }}>
-                <RemoveCircleIcon  onClick = {handleRemoveImage}sx={{ fontSize: 20, color: 'red', position: 'absolute', top: '20px',left:'40px' }} />
-                <Box sx={{
-                  width: '50px',
-                  height: '50px',
-                  border: '1px solid #DEDEDE',
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                }}>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', position: 'relative', marginRight: '480px' }}>
+                            <RemoveCircleIcon onClick={handleRemoveImage} sx={{ fontSize: 20, color: 'red', position: 'absolute', top: '20px', left: '40px' }} />
+                            <Box sx={{
+                                width: '50px',
+                                height: '50px',
+                                border: '1px solid #DEDEDE',
+                                borderRadius: '10px',
+                                overflow: 'hidden',
+                            }}>
 
-                  {selectImage && (
-                    <img
-                      src={selectImage}
-                      alt="selected"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                {selectImage && (
+                                    <img
+                                        src={selectImage}
+                                        alt="selected"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
 
-                    />)}
+                                    />)}
 
-                </Box>
-              </Box>
-            )}
-                    
+                            </Box>
+                        </Box>
+                    )}
+
                     <Button type="submit" onClick={handleSubmit}
                         sx={{
                             color: '#FFF',
@@ -168,17 +147,18 @@ function Caption() {
                             fontWeight: '400',
                             lineHeight: 'normal',
                             marginTop: '20px',
-                            marginBottom:'20px',
-                            
+                            marginBottom: '20px',
+
                         }}>
                         Post
                     </Button>
-                   
+
                 </Box>
             </Box>
 
 
-            <div><Post user={user} posts={posts} />
+            <div>
+                {/* <Post user={user} posts={posts} /> */}
             </div>
 
 
