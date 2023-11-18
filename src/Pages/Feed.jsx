@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 // import { useLocation } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Caption from '../Components/Caption';
 import Logo from '../Components/Logo';
 import AppBar from '@mui/material/AppBar';
-import { Box, Grid } from '@mui/material';
+import { Avatar, Box, Grid } from '@mui/material';
 import Post from '../Components/Post';
 import Search from '../Components/Search';
 import axios from 'axios';
@@ -50,23 +50,54 @@ function Feed() {
     }
 
     fetchPosts()
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
 
     <Box>
       <form encType="multipart/form-data" >
-        <AppBar position="static" sx={{ backgroundColor: '#180E95', padding: '10px' }}>
-          <Logo />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end'
-            }}>
-            <Link to='/home'>
-              <HomeIcon style={{ color: 'white' }} />
-            </Link>
+        <AppBar position="static" sx={{ backgroundColor: '#180E95', paddingLeft: '20px', paddingRight: '30px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Logo />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }}>
+              {/* <Link to='/home'>
+              <AccountCircleIcon style={{ color: 'white' }} />
+            </Link> */}
+              {user && user.imagePath && user.imagePath.length && user.imagePath[0] && user.imagePath[0].url ? (
+
+                // Display the uploaded avatar 
+                <Link to="/home">
+                  <Avatar
+                    src={`${user.imagePath[0].url}?${new Date().getTime()}`}
+                    sx={{
+                      width: '47px',
+                      height: '47px',
+                      borderRadius: '50%',
+                      background: '#180E95',
+                      marginRight: '20px',
+                      marginTop:'10px'
+                    }} />
+                </Link>
+
+              ) : (
+                <Link to='/home'>
+                  <AccountCircleIcon style={{ color: 'white' }} />
+                </Link>
+              )}
+
+            </Box>
+
+
+
+
+
+
+
           </Box>
         </AppBar>
         <Grid container
@@ -81,7 +112,7 @@ function Feed() {
         >
           <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
-          <Post user={user} posts={posts}  />
+          <Post user={user} posts={posts} />
         </Grid>
       </form>
 

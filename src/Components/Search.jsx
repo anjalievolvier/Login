@@ -2,6 +2,7 @@ import React, { useState, } from 'react'
 import { TextField, Typography, Grid, Box, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
+import { Link } from 'react-router-dom';
 
 const Search = ({ user, fetchPosts }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -132,7 +133,7 @@ const Search = ({ user, fetchPosts }) => {
 
               }}> {user.email}</Typography>
             </Box>
-            {userId!==user._id &&(
+            {/* {userId!==user._id &&(
             <Button variant="outlined" onClick={() => handleFollow(user._id)} sx={{
               color: '#202020',
               fontFamily: 'Aleo, sans-serif',
@@ -143,25 +144,52 @@ const Search = ({ user, fetchPosts }) => {
               textTransform: 'capitalize',
               border: '1px solid black',
             }}>Follow</Button>
-            )}
-            {/* {userId !== user._id && (
-              <Button
-                variant="outlined"
-                onClick={() => handleFollow(user._id)}
-                sx={{
-                  color: '#202020',
-                  fontFamily: 'Aleo, sans-serif',
-                  fontSize: '15px',
-                  fontStyle: 'normal',
-                  fontWeight: '600',
-                  lineHeight: 'normal',
-                  textTransform: 'capitalize',
-                  border: '1px solid black',
-                }}
-              >
-                {user.followlist.includes(user._id) ? 'Friend' : 'Follow'}
-              </Button>
             )} */}
+            {userId !== user._id ? (
+        <React.Fragment>
+          {user.isFollowing ? (
+            <Box sx={{
+              color: '#202020',
+              fontFamily: 'Aleo, sans-serif',
+              fontSize: '15px',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              lineHeight: 'normal',
+              textTransform: 'capitalize',
+              border: '1px solid black',
+            }}>Friend</Box>
+          ) : (
+            <Button variant="outlined" onClick={() => handleFollow(user._id)} sx={{
+              color: '#202020',
+              fontFamily: 'Aleo, sans-serif',
+              fontSize: '15px',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              lineHeight: 'normal',
+              textTransform: 'capitalize',
+              border: '1px solid black',
+            }}>
+              {user._id === userId ? 'View Profile' : 'Follow'}
+            </Button>
+          )}
+        </React.Fragment>
+      ) : (
+        <Button variant="outlined" 
+        component={Link}
+  to="/home"
+         sx={{
+          color: '#202020',
+          fontFamily: 'Aleo, sans-serif',
+          fontSize: '15px',
+          fontStyle: 'normal',
+          fontWeight: '600',
+          lineHeight: 'normal',
+          textTransform: 'capitalize',
+          border: '1px solid black',
+        }}>
+          View Profile
+        </Button>
+      )}
           </Box>
 
 

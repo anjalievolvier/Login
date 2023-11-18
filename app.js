@@ -380,7 +380,7 @@ app.post('/posts', async (req, res) => {
   //Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
+/////////////////Fetch posts
 app.get('/fetchposts/:userId', async (req, res) => {
   const userId = req.params.userId;
 

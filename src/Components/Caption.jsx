@@ -22,6 +22,11 @@ function Caption({ user, fetchPosts }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('inside submit');
+        if (!text && !image) {
+            console.error('Either caption or image is required.');
+            alert("Either caption or image is required.")
+            return;
+        }
         const formData = new FormData();
         formData.append('userId', userId);
         // Check if a caption is provided, and append it only if it's not empty
@@ -82,6 +87,7 @@ function Caption({ user, fetchPosts }) {
                     borderRadius: '20px',
                     width: '100%',
                     margin: '0 auto',
+                    marginBottom: '10px'
                 }}
             >
                 <TextField
@@ -90,8 +96,6 @@ function Caption({ user, fetchPosts }) {
                     placeholder="Type something"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                // backgroundColor='#DEDEDE'
-                // borderRadius='3px'
                 />
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
@@ -155,13 +159,6 @@ function Caption({ user, fetchPosts }) {
 
                 </Box>
             </Box>
-
-
-            <div>
-                {/* <Post user={user} posts={posts} /> */}
-            </div>
-
-
         </Grid >
     )
 }
