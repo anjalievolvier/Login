@@ -33,22 +33,7 @@ const Post = ({ user, posts, fetchPosts }) => {
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
-                {/* <Avatar
-                  src={
-                    post.user.imagePath && post.user.imagePath.length && post.user.imagePath[0]
-                      ? post.user.imagePath[0].url
-                      : post.user.firstname && post.user.lastname
-                        ? post.user.firstname.charAt(0).toUpperCase() + post.user.lastname.charAt(0).toUpperCase()
-                        : ''
-                  }
-                  sx={{
-                    width: '47px',
-                    height: '47px',
-                    borderRadius: '50%',
-                    background: '#D9D9D9',
-                    marginRight: '20px',
-                  }}
-                /> */}
+
                 {post.user.imagePath && post.user.imagePath.length && post.user.imagePath[0] && post.user.imagePath[0].url ? (
 
                   // Display the uploaded avatar 
