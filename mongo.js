@@ -1,6 +1,13 @@
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://localhost:27017/react-login")
-// mongoose.connect("mongodb://10.0.0.9:27017/react-login")
+// const mongoose = require("mongoose")
+// mongoose.connect("mongodb://localhost:27017/react-login")
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+const mongoUrl = process.env.MONGO_URL;
+
+mongoose
+  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+
     .then(() => {
         console.log("mongodb connected");
     })
