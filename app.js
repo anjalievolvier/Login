@@ -415,7 +415,6 @@ app.get('/fetchposts/:userId', async (req, res) => {
 
 app.get('/users/search', async (req, res) => {
   const query = req.query.query;
-  console.log('inside search server')
   if (!query) {
     return res.status(400).json({ error: 'Search query is required' });
 
@@ -423,14 +422,32 @@ app.get('/users/search', async (req, res) => {
 
   try {
     
-     const searchResults = await mongo.collection.find({
-      $or:
-       [
+
+    const [firstNameQuery, lastNameQuery] = query.split(' ');
+
+    const searchResults = await mongo.collection.find({
+      $or: [
+        {
+          $or: [
         { firstname: { $regex: new RegExp(query, 'i') } },
         { lastname: { $regex: new RegExp(query, 'i') } },
       ],
-      
-       
+    },
+    {
+      $and: [
+        { firstname: { $regex: new RegExp(firstNameQuery, 'i') } },
+        { lastname: { $regex: new RegExp(lastNameQuery, 'i') } },
+      ]
+    },
+    {
+      $and: [
+        
+         { firstname: { $regex: new RegExp( lastNameQuery,'i') } },
+         { lastname: { $regex: new RegExp(firstNameQuery, 'i') } },
+        ]
+    }
+  ]
+    
     });
     
     console.log('searchResults',searchResults);
@@ -517,6 +534,7 @@ app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
 ///////////////////////delete post
 app.delete('/delete/posts/:postId', async (req, res) => {
   const postId = req.params.postId;
+  
 
   try {
    

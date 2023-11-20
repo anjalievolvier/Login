@@ -1,16 +1,17 @@
-import React, { useState, } from 'react'
+import React, { useState,} from 'react'
 import { TextField, Typography, Grid, Box, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
 
+
 const Search = ({ user, fetchPosts }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  //   const [userId] = useState(localStorage.getItem('userId'));
-  //   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
 
-  ////////////////////////searching  for user
+   
+
+  //////////////////////searching  for user
 
   const handleSearch = async () => {
     console.log('inside handle search');
@@ -24,6 +25,7 @@ const Search = ({ user, fetchPosts }) => {
       console.error('Error searching for users');
     }
   };
+ 
 
 
   ////////////////////////////handle follow
@@ -91,7 +93,9 @@ const Search = ({ user, fetchPosts }) => {
           endAdornment: (
 
             <InputAdornment position="end">
-              <SearchIcon onClick={handleSearch} sx={{ color: '#180E95', cursor: 'pointer' }} />
+              <SearchIcon 
+              onClick={handleSearch}
+               sx={{ color: '#180E95', cursor: 'pointer' }} />
             </InputAdornment>),
 
         }}>

@@ -49,11 +49,13 @@ const Post = ({ user, posts, fetchPosts }) => {
     console.log('not post yet');
     return null;
   }
+  const sortedPosts = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
 
   return (
     <Grid container spacing={2}
     >
-      {posts.map((post) => {
+      {sortedPosts.map((post) => {
         console.log(post)
         return (
           <Grid item key={post._id} xs={12}>
@@ -124,14 +126,19 @@ const Post = ({ user, posts, fetchPosts }) => {
 
                   </Box>
                 )}
-                 {/* MoreVertIcon added here */}
-                 <MoreVertIcon sx={{ color: '#180E95', cursor: 'pointer', marginLeft: 'auto' }} 
-                 onClick={() => {
-                  // Open the delete post dialog when MoreVertIcon is clicked
-                  setDeletePostDialogOpen(true);
-                  // Set the selected post ID for deletion
-                  setSelectedPostId(post._id);
-                }}/>
+                {post.user && post.user._id === user._id && (
+  <MoreVertIcon
+    sx={{ color: '#180E95', cursor: 'pointer', marginLeft: 'auto' }}
+    onClick={() => {
+      // Open the delete post dialog when MoreVertIcon is clicked
+      setDeletePostDialogOpen(true);
+      // Set the selected post ID for deletion
+      setSelectedPostId(post._id);
+    }}
+  />
+                )}
+              
+              
               </Box>
 
 
