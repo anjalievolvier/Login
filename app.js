@@ -399,7 +399,7 @@ app.get('/fetchposts/:userId', async (req, res) => {
     // Find posts for users in the user's followlist
     const followedPosts = await mongo.post.find({ user: { $in: user.followlist } }).populate('user');
 
-    // Combine and sort the posts by timestamp (you may need to adjust the schema for timestamps)
+    // Combine and sort the posts by timestamp
     const allPosts = [...userPosts, ...followedPosts].sort((a, b) => b.timestamp - a.timestamp);
 
     // Return user details along with posts
@@ -412,51 +412,46 @@ app.get('/fetchposts/:userId', async (req, res) => {
 
 
 //////////////// user search
-
 app.get('/users/search', async (req, res) => {
   const query = req.query.query;
+  console.log('inside search server');
+
   if (!query) {
     return res.status(400).json({ error: 'Search query is required' });
-
   }
 
   try {
-    
-
-    const [firstNameQuery, lastNameQuery] = query.split(' ');
-
     const searchResults = await mongo.collection.find({
       $or: [
         {
           $or: [
-        { firstname: { $regex: new RegExp(query, 'i') } },
-        { lastname: { $regex: new RegExp(query, 'i') } },
+            { firstname: { $regex: new RegExp(query, 'i') } },
+            { lastname: { $regex: new RegExp(query, 'i') } },
+          ],
+        },
+        {
+          $and: [
+            { firstname: { $regex: new RegExp(query.split(' ')[0], 'i') } },
+            { lastname: { $regex: new RegExp(query.split(' ')[1], 'i') } },
+          ],
+        },
+        {
+          $and: [
+            { firstname: { $regex: new RegExp(query.split(' ')[1], 'i') } },
+            { lastname: { $regex: new RegExp(query.split(' ')[0], 'i') } },
+          ],
+        },
       ],
-    },
-    {
-      $and: [
-        { firstname: { $regex: new RegExp(firstNameQuery, 'i') } },
-        { lastname: { $regex: new RegExp(lastNameQuery, 'i') } },
-      ]
-    },
-    {
-      $and: [
-        
-         { firstname: { $regex: new RegExp( lastNameQuery,'i') } },
-         { lastname: { $regex: new RegExp(firstNameQuery, 'i') } },
-        ]
-    }
-  ]
-    
     });
-    
-    console.log('searchResults',searchResults);
+
+    console.log('searchResults', searchResults);
     res.json({ users: searchResults });
   } catch (error) {
     console.error('Error fetching users from the database:', error);
     res.status(500).json({ message: 'Error fetching users' });
   }
 });
+
 
 
 //////////// to follow user
@@ -534,7 +529,7 @@ app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
 ///////////////////////delete post
 app.delete('/delete/posts/:postId', async (req, res) => {
   const postId = req.params.postId;
-  
+
 
   try {
    
