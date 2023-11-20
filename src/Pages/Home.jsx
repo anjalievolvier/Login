@@ -3,7 +3,9 @@ import { Typography, Grid, Box } from '@mui/material';
 import axios from 'axios';
 import Logo from '../Components/Logo';
 import AppBar from '@mui/material/AppBar';
+import HomeIcon from '@mui/icons-material/Home';
 import UserDetails from '../Components/UserDetails';
+import { Link } from 'react-router-dom';
 const Home = () => {
 
   // const location = useLocation();
@@ -46,7 +48,20 @@ const Home = () => {
 
   return (
     <Box>
-      <AppBar position="static" sx={{ backgroundColor: '#180E95', padding: '20px' }}><Logo /></AppBar>
+      <AppBar position="static" sx={{ backgroundColor: '#180E95', paddingLeft:'20px',paddingRight:'30px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Logo />
+      <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}>
+            <Link to='/'>
+              <HomeIcon style={{ color: 'white',marginTop:'20px' }} />
+            </Link>
+            </Box>
+          </Box>
+      </AppBar>
       {user ? (
         <Grid container
           display={'flex'}
