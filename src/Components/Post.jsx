@@ -49,11 +49,11 @@ const Post = ({ user, posts, fetchPosts }) => {
     console.log('not post yet');
     return null;
   }
-
+const sortPosts = [...posts].sort((a,b)=> new Date(b.createdAt)- new Date(a.createdAt));
   return (
     <Grid container spacing={2}
     >
-      {posts.map((post) => {
+      {sortPosts.map((post) => {
         console.log(post)
         return (
           <Grid item key={post._id} xs={12}>
