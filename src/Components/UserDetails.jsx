@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect} from 'react'
 import { Typography, Box, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -26,6 +26,10 @@ function UserDetails({ user, authToken, setAuthToken, }) {
     setImageUrl(imageUrl);
   }, [imagePath, user.imagePath]);
 
+  
+
+  
+  
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -154,7 +158,7 @@ function UserDetails({ user, authToken, setAuthToken, }) {
         padding: '20px',
       }}>
       <Box display={'flex'} flexDirection={{ xs: 'column', sm: 'column', md: 'row', lg: 'row', xl: 'row' }} gap={'20px'}>
-        <Box>
+        <Box sx={{position:'relative'}}>
           {imageUrl ? (
 
             // Display the uploaded avatar 
@@ -186,8 +190,8 @@ function UserDetails({ user, authToken, setAuthToken, }) {
                 height: '30px',
                 backgroundColor: '#0E9B9',
                 borderRadius: '50%',
-
                 cursor: 'pointer',
+               
               }}
             >
               <span
@@ -195,9 +199,10 @@ function UserDetails({ user, authToken, setAuthToken, }) {
                   color: 'white',
                   fontSize: '20px',
                   fontWeight: 'bold',
+                  
 
                 }}>
-                <AddAPhotoIcon />
+                <AddAPhotoIcon sx={{position:'absolute',top:'125px',left:'100px'}}/>
               </span>
             </div>
           </label>
