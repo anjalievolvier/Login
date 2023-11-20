@@ -1,12 +1,21 @@
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://localhost:27017/react-login")
-// mongoose.connect("mongodb://10.0.0.9:27017/react-login")
+
+// const mongoose = require("mongoose")
+// mongoose.connect("mongodb://localhost:27017/react-login")
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+const mongoUrl = process.env.MONGO_URL;
+
+mongoose
+  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
     .then(() => {
-        console.log("mongodb connected");
+        console.log("MongoDB connected");
     })
     .catch((error) => {
-        console.error(error);
-    })
+        console.error("MongoDB connection error:", error);
+    });
 const newSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -75,10 +84,7 @@ const postSchema = new mongoose.Schema({
       required: true,
     },
 
-    // content: {
-    //   type: String,
-    // //   required: true,
-    // },
+   
     text: {
         type: String,
         //  required: true,
