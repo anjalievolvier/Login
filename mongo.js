@@ -1,11 +1,15 @@
+
+// const mongoose = require("mongoose")
+// mongoose.connect("mongodb://localhost:27017/react-login")
 require('dotenv').config();
-
-
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const mongoUrl = process.env.MONGO_URL;
-// console.log('DB url:::::::',mongoUrl)
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+
+mongoose
+  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
     .then(() => {
         console.log("MongoDB connected");
     })
@@ -80,10 +84,7 @@ const postSchema = new mongoose.Schema({
       required: true,
     },
 
-    // content: {
-    //   type: String,
-    // //   required: true,
-    // },
+   
     text: {
         type: String,
         //  required: true,

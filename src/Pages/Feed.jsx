@@ -86,7 +86,7 @@ function Feed() {
 
               ) : (
                 <Link to='/home'>
-                  <AccountCircleIcon style={{ color: 'white' }} />
+                  <AccountCircleIcon style={{ color: 'white',marginTop:'20px' }} />
                 </Link>
               )}
 
@@ -112,7 +112,7 @@ function Feed() {
         >
           <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
-          <Post user={user} posts={posts} />
+          <Post user={user} posts={posts} fetchPosts={fetchPosts} />
         </Grid>
       </form>
 

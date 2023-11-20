@@ -514,6 +514,20 @@ app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
     res.status(500).json({ message: 'Error unfollowing user' });
   }
 });
+///////////////////////delete post
+app.delete('/delete/posts/:postId', async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+   
+    await mongo.post.findByIdAndDelete(postId);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 
