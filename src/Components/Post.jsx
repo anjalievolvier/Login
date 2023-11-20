@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-
 const Post = ({ user, posts, fetchPosts }) => {
   console.log('userdetails', user);
   console.log('post;;;;;', posts);
@@ -32,7 +31,7 @@ const Post = ({ user, posts, fetchPosts }) => {
                 marginBottom: '10px',
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'row', p: 2, }}>
 
                 {post.user.imagePath && post.user.imagePath.length && post.user.imagePath[0] && post.user.imagePath[0].url ? (
 
@@ -48,7 +47,6 @@ const Post = ({ user, posts, fetchPosts }) => {
 
 
                 ) : (
-                  // Display the user's avatar
                   <Avatar sx={{
                     width: '47px',
                     height: '47px',
@@ -86,7 +84,7 @@ const Post = ({ user, posts, fetchPosts }) => {
                     >
                       {new Date(post.createdAt).toLocaleDateString('en-US', { day: 'numeric' })}{' '}
                       {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'long' })}
-                    </Typography>
+                    </Typography>                                      
                   </Box>
                 )}
               </Box>

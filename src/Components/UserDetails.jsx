@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect} from 'react'
 import { Typography, Box, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -26,6 +26,10 @@ function UserDetails({ user, authToken, setAuthToken, }) {
     setImageUrl(imageUrl);
   }, [imagePath, user.imagePath]);
 
+  
+
+  
+  
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -197,7 +201,7 @@ function UserDetails({ user, authToken, setAuthToken, }) {
                   fontWeight: 'bold',
 
                 }}>
-                <AddAPhotoIcon />
+                <AddAPhotoIcon/>
               </span>
             </div>
           </label>
