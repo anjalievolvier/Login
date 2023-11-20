@@ -157,7 +157,7 @@ const sortPosts = [...posts].sort((a,b)=> new Date(b.createdAt)- new Date(a.crea
                 </DialogActions>
               </Dialog>
 
-              <Box sx={{ marginTop: '10px', p: 2 }}>
+              <Box sx={{ padding:'0px 10px 10px 10px'}}>
                 {post.text && (
                   <Typography
                     variant="body1"

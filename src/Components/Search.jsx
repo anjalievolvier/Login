@@ -31,6 +31,7 @@ const Search = ({ user, fetchPosts }) => {
   ////////////////////////////handle follow
   // const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
   const userId = localStorage.getItem('userId');
+
   const handleFollow = async (otherUserId) => {
     // You'll need to send a request to your server to update the user's follow list.
     // console.log('inside handleFollow client');
