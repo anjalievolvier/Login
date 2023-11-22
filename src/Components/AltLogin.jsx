@@ -11,23 +11,11 @@ const AltLogin = () => {
 
                         }}>
                             <Typography 
-                            sx={{
-                            color: '#000',
-                            fontFamily: 'Aleo, sans-serif',
-                            fontSize: '15px',
-                            fontStyle: 'normal',
-                            fontWeight: '700',
-                            lineHeight: 'normal',
-                            }}>Login </Typography>
+                            sx={{color: '#000',fontFamily: 'Aleo, sans-serif',fontSize: '15px',fontStyle: 'normal',fontWeight: '700',lineHeight: 'normal',}}>
+                                Login </Typography>
                             <Typography
-                            sx={{
-                            color: '#000',
-                            fontFamily: 'Aleo, sans-serif',
-                            fontSize: '15px',
-                            fontStyle: 'normal',
-                            fontWeight: '700',
-                            lineHeight: 'normal',
-                            }}>with</Typography>
+                            sx={{color: '#000',fontFamily: 'Aleo, sans-serif',fontSize: '15px',fontStyle: 'normal',fontWeight: '700',lineHeight: 'normal',}}>
+                                with</Typography>
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} 
                         sx={{ display: 'flex', flexDirection: 'row', gap: '20px',marginLeft: '-17px'}}>
@@ -43,11 +31,7 @@ const AltLogin = () => {
                             <img
                                 src='/facebook.png'
                                 alt='Facebook'
-                                style={{
-                                    maxWidth:'100%',
-                                     width: '100%',
-                                    height: 'auto',
-                                    display:'flex',
+                                style={{maxWidth:'100%', width: '100%',height: 'auto',display:'flex',
                                 }} />
                         </Grid>
 </Box>
