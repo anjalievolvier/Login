@@ -6,6 +6,7 @@ const cors = require("cors")
 const app = express()
 const bcrypt = require("bcrypt");
 const crypto = require('crypto');
+const { ObjectId } = require('mongodb');
 // const multer = require("multer"); // Import multer for handling file uploads
 const path = require("path");
 const fileUpload = require('express-fileupload');
@@ -380,7 +381,7 @@ app.post('/posts', async (req, res) => {
   //Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
+/////////////////Fetch posts
 app.get('/fetchposts/:userId', async (req, res) => {
   const userId = req.params.userId;
 
@@ -398,7 +399,7 @@ app.get('/fetchposts/:userId', async (req, res) => {
     // Find posts for users in the user's followlist
     const followedPosts = await mongo.post.find({ user: { $in: user.followlist } }).populate('user');
 
-    // Combine and sort the posts by timestamp (you may need to adjust the schema for timestamps)
+    // Combine and sort the posts by timestamp
     const allPosts = [...userPosts, ...followedPosts].sort((a, b) => b.timestamp - a.timestamp);
 
     // Return user details along with posts
@@ -411,34 +412,46 @@ app.get('/fetchposts/:userId', async (req, res) => {
 
 
 //////////////// user search
-
 app.get('/users/search', async (req, res) => {
   const query = req.query.query;
-  console.log('inside search server')
+  console.log('inside search server');
+
   if (!query) {
     return res.status(400).json({ error: 'Search query is required' });
-
   }
 
   try {
-    
-     const searchResults = await mongo.collection.find({
-      $or:
-       [
-        { firstname: { $regex: new RegExp(query, 'i') } },
-        { lastname: { $regex: new RegExp(query, 'i') } },
+    const searchResults = await mongo.collection.find({
+      $or: [
+        {
+          $or: [
+            { firstname: { $regex: new RegExp(query, 'i') } },
+            { lastname: { $regex: new RegExp(query, 'i') } },
+          ],
+        },
+        {
+          $and: [
+            { firstname: { $regex: new RegExp(query.split(' ')[0], 'i') } },
+            { lastname: { $regex: new RegExp(query.split(' ')[1], 'i') } },
+          ],
+        },
+        {
+          $and: [
+            { firstname: { $regex: new RegExp(query.split(' ')[1], 'i') } },
+            { lastname: { $regex: new RegExp(query.split(' ')[0], 'i') } },
+          ],
+        },
       ],
-      
-       
     });
-    
-    console.log('searchResults',searchResults);
+
+    console.log('searchResults', searchResults);
     res.json({ users: searchResults });
   } catch (error) {
     console.error('Error fetching users from the database:', error);
     res.status(500).json({ message: 'Error fetching users' });
   }
 });
+
 
 
 //////////// to follow user
@@ -475,6 +488,59 @@ app.post('/users/follow/:userId/:otherUserId', async (req, res) => {
     res.status(500).json({ message: 'Error following user' });
   }
 });
+
+///////////////// Unfollow User
+
+app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
+  const userId = req.params.userId;
+  const otherUserId = req.params.otherUserId;
+
+  try {
+    const user = await mongo.collection.findOne({ _id: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // console.log('Before unfollow:', user.followlist);
+
+    // Convert otherUserId to ObjectId for comparison
+    const otherUserIdObject = new ObjectId(otherUserId);
+
+    // Check if the user is not following the other user
+    const isNotFollowing = !user.followlist.map(id => id.toString()).includes(otherUserIdObject.toString());
+
+    if (isNotFollowing) {
+      return res.status(400).json({ message: 'User is not following the other user' });
+    }
+
+    // Remove the other user's ID from the user's followlist
+    user.followlist = user.followlist.filter(id => id.toString() !== otherUserIdObject.toString());
+    await user.save();
+
+    // console.log('After unfollow:', user.followlist);
+
+    res.status(200).json({ message: 'User has unfollowed the other user' });
+  } catch (error) {
+    console.error('Error unfollowing user:', error);
+    res.status(500).json({ message: 'Error unfollowing user' });
+  }
+});
+///////////////////////delete post
+app.delete('/delete/posts/:postId', async (req, res) => {
+  const postId = req.params.postId;
+
+
+  try {
+   
+    await mongo.post.findByIdAndDelete(postId);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 
