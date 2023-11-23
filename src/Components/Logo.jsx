@@ -7,7 +7,6 @@ const Logo = () => {
       width: '100%',
       height: 'auto',
       textAlign: 'center',
-
     }}>
       <img
         src="/Logo.png"

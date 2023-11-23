@@ -7,8 +7,7 @@ const PublicRoute = ({ element,}) => {
     return isAuthenticated?( 
     <Navigate to="/" replace/>
     ):(
-      element
-      
+      element   
   );
 };
 

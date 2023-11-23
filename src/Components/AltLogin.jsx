@@ -1,6 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material'
 import React from 'react'
-
 const AltLogin = () => {
     return (
         <Box xs={12} sm={12} md={12} sx={{ display: 'flex', flexDirection: 'column', gap: { xs: '10px', sm: '10px' } }}>

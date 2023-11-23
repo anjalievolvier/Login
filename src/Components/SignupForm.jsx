@@ -1,20 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {
-    TextField,
-    Typography,
-    Button,
-    InputAdornment,
-    IconButton,
-    Grid,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-} from "@mui/material";
+import { TextField, Typography, Button, InputAdornment, IconButton, Grid, Select, MenuItem, FormControl, InputLabel, } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
 function SignupForm({ userData, onClose }) {
     const history = useNavigate();
     const [email, setEmail] = useState("");
@@ -23,44 +11,33 @@ function SignupForm({ userData, onClose }) {
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [gender, setGender] = useState("");
-    console.log(gender);
     const [phone, setPhone] = useState("");
     const [passwordError, setPasswordError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [phoneError, setPhoneError] = useState(false);
     const [registrationMessage, setRegistrationMessage] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
-    const isEditing = (userData ? true : false); // Check if userId is provided to determine edit mode
-
+    const isEditing = (userData ? true : false);
     useEffect(() => {
-        // assigning user details
-
         if (isEditing) {
             setFirstname(userData.firstname);
             setLastname(userData.lastname);
             setEmail(userData.email);
-            // setPassword(userData.password);
             setPhone(userData.phone);
             setGender(userData.gender);
         }
     }, [userData, isEditing]);
-
-
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-
     async function submit(e) {
         e.preventDefault();
-        // Check if password contains at least 8 characters
         if (password.length < 8) {
             setPasswordError(true);
             return;
         } else {
             setPasswordError(false);
         }
-
-        // Validate email using regex
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             setEmailError(true);
@@ -68,8 +45,6 @@ function SignupForm({ userData, onClose }) {
         } else {
             setEmailError(false);
         }
-
-        // Validate phone number using regex (10-digit number)
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(phone)) {
             setPhoneError(true);
@@ -79,7 +54,6 @@ function SignupForm({ userData, onClose }) {
         }
         if (isEditing) {
             try {
-                //Send a PUT request to update the user's profile
                 await axios.put(`http://localhost:8000/user/${userData._id}`, {
                     firstname,
                     lastname,
@@ -94,7 +68,6 @@ function SignupForm({ userData, onClose }) {
             }
         }
         else {
-            // Check if password and confirm password match
             if (password !== ConfirmPassword) {
                 setPasswordError(true);
                 return;
@@ -132,161 +105,67 @@ function SignupForm({ userData, onClose }) {
             }
         }
     }
-
     const handleCancelClick = () => {
         onClose();
     };
-
     return (
-        <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-        //  overflow={'auto'}
-        >
+        <Grid container justifyContent="center" alignItems="center" spacing={1} >
             <form method="POST">
-
-                <Grid
-
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={12}
-                    display={'flex'}
-                    gap={{xs:'10px', lg:'20px'}}
-                    paddingTop={'25px'}
-                    flexDirection={{ xs: 'column', md:'row',lg: 'row' }} // Set initial layout direction to row
-                >
+                <Grid item xs={12} sm={12} md={12} lg={12} display={'flex'}
+                    gap={{ xs: '10px', lg: '20px' }} paddingTop={'25px'}
+                    flexDirection={{ xs: 'column', md: 'row', lg: 'row' }} >
                     <TextField
                         onChange={(e) => setFirstname(e.target.value)}
                         name="firstname"
                         value={firstname}
                         label={
                             <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
+                                sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
                                 First name
                             </Typography>
                         }
-                        sx={{
-                            borderRadius: 0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // width:{xs:'100%',sm:'100%',md:'50%',lg:'50%',xl:'50%'}
-                        }}
-                        id="outlined-size-small"
-                        size="small"
-                        // Set flex to 1 to make the width equal
-                        flex={1}
-                    />
-
+                        sx={{ borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
+                        id="outlined-size-small" size="small" flex={1} />
                     <TextField
                         onChange={(e) => setLastname(e.target.value)}
                         name="lastname"
                         value={lastname}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Last name
-                            </Typography>
+                        label={<Typography
+                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                            Last name
+                        </Typography>
                         }
-                        sx={{
-                            borderRadius: 0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // width:{xs:'100%',sm:'100%',md:'50%',lg:'50%',xl:'50%'}
-                        }}
-                        id="outlined-size-small"
-                        size="small"
-                        // Set flex to 1 to make the width equal
-                        flex={1}
-                    />
+                        sx={{ borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
+                        id="outlined-size-small" size="small" flex={1} />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12} 
-                 marginTop={'15px'}
-                >
+                <Grid item xs={12} sm={12} md={12} lg={12} marginTop={'15px'}>
                     <TextField
                         onChange={(e) => setEmail(e.target.value)}
                         name="email"
                         value={email}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Email
-                            </Typography>
+                        label={<Typography
+                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                            Email
+                        </Typography>
                         }
-                        sx={{
-                            width: '100%',
-                            borderRadius: 0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // marginTop: '16px',
-                            // padding: '0',
-                        }}
-                        id="outlined-size-small"
-                        size="small"
-
-                        error={emailError}
-                        helperText={emailError ? "Invalid email address" : ""}
-                    />
+                        sx={{ width: '100%', borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
+                        id="outlined-size-small" size="small" error={emailError}
+                        helperText={emailError ? "Invalid email address" : ""} />
                 </Grid>
                 <br />
                 <Grid item xs={12} sm={12} md={12} lg={12} >
                     <TextField
                         onChange={(e) => setPassword(e.target.value)}
                         name="password"
-                        // value={password}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Password
-                            </Typography>
+                        label={<Typography
+                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                            Password
+                        </Typography>
                         }
-                        sx={{
-                            width: '100%',
-                            borderRadius: 0,
-                            flexShrink:0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // marginTop: '16px',
-                            // padding: '0',
-                        }}
+                        sx={{ width: '100%', borderRadius: 0, flexShrink: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         id="outlined-size-small"
                         size="small"
-                        type={showPassword ? "text" : "password"} // Toggle password visibility
+                        type={showPassword ? "text" : "password"}
                         error={passwordError}
                         helperText={
                             passwordError
@@ -299,14 +178,12 @@ function SignupForm({ userData, onClose }) {
                                     <IconButton
                                         edge="end"
                                         onClick={togglePasswordVisibility}
-                                        tabIndex={-1}
-                                    >
+                                        tabIndex={-1}>
                                         {showPassword ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
                                 </InputAdornment>
                             ),
-                        }}
-                    />
+                        }} />
                 </Grid>
                 <br />
                 <Grid item xs={12} sm={12} md={12} lg={12} >
@@ -314,32 +191,14 @@ function SignupForm({ userData, onClose }) {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         name="ConfirmPassword"
                         value={ConfirmPassword}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Confirm Password
-                            </Typography>
+                        label={<Typography
+                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                            Confirm Password
+                        </Typography>
                         }
-                        sx={{
-                            width: '100%',
-                            borderRadius: 0,
-                            flexShrink:0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                            // marginTop: '16px',
-                            // padding: '0',
-                        }}
-                        id="outlined-size-small"
-                        size="small"
-                        type={showPassword ? "text" : "password"} // Toggle password visibility
+                        sx={{ width: '100%', borderRadius: 0, flexShrink: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
+                        id="outlined-size-small" size="small"
+                        type={showPassword ? "text" : "password"}
                         error={passwordError}
                         helperText={passwordError ? "Passwords do not match" : ""}
                         InputProps={{
@@ -348,75 +207,38 @@ function SignupForm({ userData, onClose }) {
                                     <IconButton
                                         edge="end"
                                         onClick={togglePasswordVisibility}
-                                        tabIndex={-1}
-                                    >
+                                        tabIndex={-1}>
                                         {showPassword ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
                                 </InputAdornment>
                             ),
-                        }}
-                    />
+                        }} />
                 </Grid>
                 <br />
                 <Grid item xs={12} sm={12} md={12} lg={12} >
-                    <TextField
-                        onChange={(e) => setPhone(e.target.value)}
+                    <TextField onChange={(e) => setPhone(e.target.value)}
                         name="phone"
                         value={phone}
-                        label={
-                            <Typography
-                                sx={{
-                                    color: '#B4B4B4',
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '15px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                }}
-                            >
-                                Mobile Number
-                            </Typography>
+                        label={<Typography
+                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                            Mobile Number
+                        </Typography>
                         }
-                        sx={{
-                            width: '100%',
-                            flexShrink:0,
-                            borderRadius: 0,
-                            border: '1px solid #736EFF',
-                            background: '#FFFCF3',
-                        }}
-                        id="outlined-size-small"
-                        size="small"
+                        sx={{width: '100%',flexShrink: 0,borderRadius: 0,border: '1px solid #736EFF',background: '#FFFCF3',}}
+                        id="outlined-size-small" size="small"
                         error={phoneError}
-                        helperText={phoneError ? "Invalid phone number" : ""}
-                    />
+                        helperText={phoneError ? "Invalid phone number" : ""}/>
                 </Grid>
                 <br />
                 <Grid item xs={12} sm={12} md={12} lg={12} >
-
                     <FormControl fullWidth >
-                        <InputLabel id="demo-simple-select-label" sx={{
-                            color: '#B4B4B4',
-                            fontFamily: 'Aleo, sans-serif',
-                            fontSize: '15px',
-                            fontStyle: 'normal',
-                            fontWeight: '400',
-                            lineHeight: 'normal'
-
-                        }}>Gender</InputLabel>
+                        <InputLabel id="demo-simple-select-label"
+                            sx={{color: '#B4B4B4',fontFamily: 'Aleo, sans-serif',fontSize: '15px',fontStyle: 'normal',fontWeight: '400',lineHeight: 'normal'
+                            }}>Gender</InputLabel>
                         <Select
-
                             value={gender}
                             onChange={(e) => setGender(e.target.value)}
-
-                            sx={{
-                                width: '100%',
-                                height: '37px',
-                                flexShrink: 0,
-                                border: '1px solid #736EFF',
-                                background: '#FFFCF3',
-
-                            }}
-                        >
+                            sx={{width: '100%',height: '37px',flexShrink: 0,border: '1px solid #736EFF',background: '#FFFCF3',}}>
                             <MenuItem value="">Select Gender</MenuItem>
                             <MenuItem value="male">Male</MenuItem>
                             <MenuItem value="female">Female</MenuItem>
@@ -424,34 +246,15 @@ function SignupForm({ userData, onClose }) {
                         </Select>
                     </FormControl>
                 </Grid>
-
                 {
                     isEditing ? (
                         <Grid item xs={12} sm={12} md={12} lg={12} >
-                            <Button
-
-                                onClick={submit}
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    fontFamily: 'Aleo, sans-serif',
-                                    fontSize: '14px',
-                                    fontStyle: 'normal',
-                                    fontWeight: '400',
-                                    lineHeight: 'normal',
-                                    backgroundColor: '#180E95',
-                                    textTransform: 'capitalize',
-                                    marginTop: '15px',
-                                    height: '40px',
-                                    borderRadius: '0',
-                                    width: '100%',
-                                }}
-                            >
+                            <Button onClick={submit} fullWidth variant="contained"
+                                 color="primary"
+                                sx={{fontFamily: 'Aleo, sans-serif',fontSize: '14px',fontStyle: 'normal',fontWeight: '400',lineHeight: 'normal',backgroundColor: '#180E95',textTransform: 'capitalize',marginTop: '15px', height: '40px',borderRadius: '0',width: '100%',}}>
                                 Save
                             </Button>
                             <Button
-
                                 onClick={handleCancelClick}
                                 fullWidth
                                 variant="contained"

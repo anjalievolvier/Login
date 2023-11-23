@@ -1,43 +1,16 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import SignupForm from './SignupForm';
-
 const SignupBox = () => {
   return (
     <Grid item xs={12} sm={12} md={12} spacing={'2'} p={'10px'}>
       <Box
-        sx={{
-          backgroundColor: '#E1E3FF',
-          maxWidth: '500px', 
-          margin: '20px',
-          padding: '60px', 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+        sx={{backgroundColor: '#E1E3FF',maxWidth: '500px', margin: '20px',padding: '60px', display: 'flex',flexDirection: 'column',alignItems: 'center',}} >
         <SignupForm />
-
         <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center', 
-            marginTop: '15px',
-          }}
-        >
+          sx={{ display: 'flex',flexDirection: 'row',justifyContent: 'center', marginTop: '15px',  }}>
           <Typography
-            sx={{
-              color: '#000',
-              textAlign: 'center',
-              fontFamily: 'Aleo, sans-serif',
-              fontSize: '10px',
-              fontStyle: 'normal',
-              fontWeight: '400',
-              lineHeight: 'normal',
-              marginTop: '5px',
-            }}
-          >
+            sx={{ color: '#000', textAlign: 'center', fontFamily: 'Aleo, sans-serif', fontSize: '10px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal',marginTop: '5px', }}>
             By signing in, you are agreeing to our{' '}
             <span style={{ textDecoration: 'underline' }}>
               Terms and Conditions &nbsp;

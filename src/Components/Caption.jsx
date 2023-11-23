@@ -32,7 +32,6 @@ function Caption({ user, fetchPosts }) {
 
             formData.append('image', image);
         }
-
         const response = await fetch('http://localhost:8000/posts', {
             method: 'POST',
             body: formData,
