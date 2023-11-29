@@ -1,15 +1,8 @@
-
-// const mongoose = require("mongoose")
-// mongoose.connect("mongodb://localhost:27017/react-login")
 require('dotenv').config();
 const mongoose = require('mongoose');
-
 const mongoUrl = process.env.MONGO_URL;
-
 mongoose
-  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-
-
+    .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MongoDB connected");
     })
@@ -27,7 +20,7 @@ const newSchema = new mongoose.Schema({
         required: true,
         minlength: 8,
     },
-  
+
     firstname: {
         type: String,
         required: true
@@ -44,7 +37,7 @@ const newSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-     tokens: [
+    tokens: [
         {
             token: {
                 type: String,
@@ -57,61 +50,82 @@ const newSchema = new mongoose.Schema({
         },
     ],
     imagePath: [
-        { 
-            url:{
+        {
+            url: {
                 type: String,
             }
         }],
-        followlist: [
-            {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'collection', // Reference to the 'collection' model (your User model)
-            },
-          ],
+    followlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'collection', // Reference to the 'collection' model (your User model)
+        },
+    ],
 })
 const collection = mongoose.model("collection", newSchema)
-
-
-
 const postSchema = new mongoose.Schema({
-    username:{
-        type:String,
-        required:true
+    username: {
+        type: String,
+        required: true
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-       ref: 'collection', // Reference to the user who created the post
-      required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection', // Reference to the user who created the post
+        required: true,
     },
-
-   
     text: {
         type: String,
         //  required: true,
     },
     images: [
-      {
-        url: {
-          type: String,
-          required: true,
+        {
+            url: {
+                type: String,
+                required: true,
+            },
+            description: {
+                type: String,
+            },
         },
-        description: {
-          type: String,
+    ],
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'comment',
         },
-      },
     ],
     createdAt: {
         type: Date,
         default: Date.now,
-      },
-      createdMonth: {
+    },
+    createdMonth: {
         type: String,
         default: new Date().toLocaleString('default', { month: 'long' }),
-      },
-  });
-  
-  const post = mongoose.model('post', postSchema);
-  
-  module.exports.collection = collection;
-  module.exports.post = post;
+    },
+});
+const post = mongoose.model('post', postSchema);
 
+const commentSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection',
+        required: true,
+    },
+    post: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'post',
+        required: true,
+    },
+    text: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+const comment = mongoose.model('comment', commentSchema);
+module.exports.comment = comment;
+module.exports.collection = collection;
+module.exports.post = post;

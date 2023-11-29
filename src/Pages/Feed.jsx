@@ -13,6 +13,7 @@ function Feed() {
   const [user, setUser] = useState(null);
   const [userId] = useState(localStorage.getItem('userId'));
   const [posts, setPosts] = useState([]);
+  // const [comments, setComments] = useState([]);
   // Fetch posts from the server when the component mounts
   const fetchPosts = async () => {
     try {
@@ -27,7 +28,16 @@ function Feed() {
       console.error('Error fetching posts:', error);
     }
   };
-
+  // const fetchComments = async (postId) => {
+  //   // API call to get comments for a post
+  //   try {
+  //     const response = await fetch(`http://localhost:8000/get-comments/${postId}`);
+  //     const data = await response.json();
+  //     setComments(data.comments);
+  //   } catch (error) {
+  //     console.error('Error fetching comments:', error);
+  //   }
+  // };
   useEffect(() => {
     // Fetch the user details using the user ID and the authToken
     const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
@@ -50,6 +60,7 @@ function Feed() {
     }
 
     fetchPosts()
+    // fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,9 +76,6 @@ function Feed() {
                 display: 'flex',
                 justifyContent: 'flex-end'
               }}>
-              {/* <Link to='/home'>
-              <AccountCircleIcon style={{ color: 'white' }} />
-            </Link> */}
               {user && user.imagePath && user.imagePath.length && user.imagePath[0] && user.imagePath[0].url ? (
 
                 // Display the uploaded avatar 
@@ -91,13 +99,6 @@ function Feed() {
               )}
 
             </Box>
-
-
-
-
-
-
-
           </Box>
         </AppBar>
         <Grid container
@@ -112,7 +113,7 @@ function Feed() {
         >
           <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
-          <Post user={user} posts={posts} fetchPosts={fetchPosts} />
+          <Post user={user} posts={posts} fetchPosts={fetchPosts}/>
         </Grid>
       </form>
 

@@ -16,7 +16,6 @@ function Caption({ user, fetchPosts }) {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('inside submit');
         if (!text && !image) {
             console.error('Either caption or image is required.');
             alert("Either caption or image is required.")
@@ -29,7 +28,6 @@ function Caption({ user, fetchPosts }) {
             formData.append('text', text);
         }
         if (image) {
-
             formData.append('image', image);
         }
         const response = await fetch('http://localhost:8000/posts', {
@@ -43,8 +41,8 @@ function Caption({ user, fetchPosts }) {
             setImage(null);
             setSelectImage(null);
             setIsImageSelected(false);
-            console.log('Saved Post:', responseData.savedPost);
-            console.log('User Data:', responseData.user);
+             console.log('Saved Post:', responseData.savedPost);
+            // console.log('User Data:', responseData.user);
             setImage(null);
             setText('')
         } else {
@@ -59,7 +57,7 @@ function Caption({ user, fetchPosts }) {
             setIsImageSelected(false);
         }
     }
-    console.log('userdetails in caption', user);
+    // console.log('userdetails in caption', user);
     return (
         <Grid container>
             <Box

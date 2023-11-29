@@ -11,11 +11,9 @@ const { ObjectId } = require('mongodb');
 const path = require("path");
 const fileUpload = require('express-fileupload');
 
- const fs = require("fs");
+const fs = require("fs");
 // const { promisify } = require("util");
 app.use(fileUpload());
-
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
@@ -60,9 +58,6 @@ app.post("/", async (req, res) => {
             authToken: authToken,
             authTokenExpiration: expirationDate,
           });
-
-          // console.log("User found", user);
-          //   res.json({message: "User exists",user});
         }
         else {
           // Passwords don't match, invalid credentials
@@ -102,7 +97,7 @@ app.post("/signup", async (req, res) => {
         if (err) {
           console.error("Error hashing password:", err);
           res.status(500).json({ message: "Internal server error" });
-        } 
+        }
         else {
           const data = {
             email: email,
@@ -120,7 +115,7 @@ app.post("/signup", async (req, res) => {
           res.json("not exist");
           await mongo.collection.insertMany([data]);
         }
-        
+
       });
     }
 
@@ -237,7 +232,7 @@ app.post('/uploadimage', async (req, res) => {
       const imageUrl = `http://localhost:8000/uploads/${uniqueSuffix + uploadedImage.name}`;
 
       // Update the user's image path with the URL
-      user.imagePath=[];
+      user.imagePath = [];
       user.imagePath.unshift({
         url: imageUrl,
       });
@@ -253,9 +248,6 @@ app.post('/uploadimage', async (req, res) => {
     res.status(404).json({ message: "User not found" });
   }
 }
-
-
-
 );
 // Serve uploaded images
 app.use('/uploads', express.static(permanentUploadsPath));
@@ -267,7 +259,6 @@ app.delete('/deleteimage', async (req, res) => {
 
   try {
     const user = await mongo.collection.findOne({ _id: userId });
-
     if (user) {
       if (user.imagePath && user.imagePath.length > 0) {
         const imagePath = user.imagePath[0].url.replace('http://localhost:8000/uploads/', '');
@@ -278,8 +269,7 @@ app.delete('/deleteimage', async (req, res) => {
             console.error('Error deleting the file:', err);
             return res.status(500).json({ error: 'Error deleting the file', details: err.message });
           }
-
-          // Remove the image path from the user's record
+        // Remove the image path from the user's record
           user.imagePath = [];
           user.save();
 
@@ -312,73 +302,69 @@ app.post('/posts', async (req, res) => {
       const newPost = new mongo.post({
         username: user.firstname,
         user: userId,
-        text:text,
-        images: [], // Empty array for images since there is no image
+        text: text,
+        images: [],
       });
-      //console.log('Text:',newPost);
-      // console.log('help');
-      // return res.status(400).json({ message: 'Both content and image are required' });
-
       newPost.save()
         .then((savedPost) => {
-          res.status(200).json({ message: 'New post created successfully', savedPost: savedPost,user:user });
+          res.status(200).json({ message: 'New post created successfully', savedPost: savedPost, user: user });
         })
         .catch((err) => {
           console.error('Error creating a new post:', err);
           res.status(500).json({ message: 'Error creating a new post' });
         });
-      
+
     }
-    else{
-   
-    const uploadedImage = req.files.image;
-    console.log('uploadimage:',uploadedImage);
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const imagePath = path.join(__dirname, 'uploads', uniqueSuffix + uploadedImage.name);
-    //console.log('imagepath');
+    else {
 
-    // Move the uploaded image to the permanent location
-    uploadedImage.mv(imagePath, (err) => {
-      if (err) {
-        console.error('Error while saving the file:', err);
-        return res.status(500).json({ error: 'Error while saving the file', details: err.message });
-      }
+      const uploadedImage = req.files.image;
+      console.log('uploadimage:', uploadedImage);
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const imagePath = path.join(__dirname, 'uploads', uniqueSuffix + uploadedImage.name);
+      //console.log('imagepath');
 
-      // Construct the URL of the uploaded image
-      const imageUrl = `http://localhost:8000/uploads/${uniqueSuffix + uploadedImage.name}`;
+      // Move the uploaded image to the permanent location
+      uploadedImage.mv(imagePath, (err) => {
+        if (err) {
+          console.error('Error while saving the file:', err);
+          return res.status(500).json({ error: 'Error while saving the file', details: err.message });
+        }
 
-      // Remove the existing imagePath (if any)
-      user.imagePath = [];
+        // Construct the URL of the uploaded image
+        const imageUrl = `http://localhost:8000/uploads/${uniqueSuffix + uploadedImage.name}`;
 
-      // Create a new post and save it to MongoDB
-      const newPost = new mongo.post({
-        username:user.firstname,
-        user: userId,
-        text:text,
-        images: [
-          {
-            url: imageUrl,
-            description: 'Description for the uploaded image',
-          },
-        ],
+        // Remove the existing imagePath (if any)
+        user.imagePath = [];
+
+        // Create a new post and save it to MongoDB
+        const newPost = new mongo.post({
+          username: user.firstname,
+          user: userId,
+          text: text,
+          images: [
+            {
+              url: imageUrl,
+              description: 'Description for the uploaded image',
+            },
+          ],
+        });
+        newPost.save()
+          .then((savedPost) => {
+            console.log('success');
+            res.status(200).json({ message: 'New post created successfully', savedPost: savedPost, user: user });
+          })
+          .catch((err) => {
+            console.error('Error creating a new post:', err);
+            res.status(500).json({ message: 'Error creating a new post' });
+          });
       });
-      newPost.save()
-  .then((savedPost) => {
-    console.log('success');
-    res.status(200).json({ message: 'New post created successfully', savedPost: savedPost,user:user });
-  })
-  .catch((err) => {
-    console.error('Error creating a new post:', err);
-    res.status(500).json({ message: 'Error creating a new post' });
-  });
-    });
-  }
+    }
   } else {
     res.status(404).json({ message: 'User not found' });
   }
 });
 
-  //Serve uploaded images
+//Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /////////////////Fetch posts
@@ -414,7 +400,7 @@ app.get('/fetchposts/:userId', async (req, res) => {
 //////////////// user search
 app.get('/users/search', async (req, res) => {
   const query = req.query.query;
-  console.log('inside search server');
+  // console.log('inside search server');
 
   if (!query) {
     return res.status(400).json({ error: 'Search query is required' });
@@ -451,8 +437,6 @@ app.get('/users/search', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users' });
   }
 });
-
-
 
 //////////// to follow user
 
@@ -530,9 +514,7 @@ app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
 app.delete('/delete/posts/:postId', async (req, res) => {
   const postId = req.params.postId;
 
-
   try {
-   
     await mongo.post.findByIdAndDelete(postId);
     res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
@@ -540,10 +522,68 @@ app.delete('/delete/posts/:postId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// Add comment to a post
+app.post('/add-comment', async (req, res) => {
+  const { postId, userId, text } = req.body;
 
+  try {
+    const user = await mongo.collection.findOne({ _id: userId });
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
+    const post = await mongo.post.findOne({ _id: postId });
 
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    const newComment = new mongo.comment({
+      user: userId,
+      post: postId,
+      text,
+    });
+    await newComment.save();
+
+    // Add the comment to the post's comments array
+    post.comments.push(newComment._id);
+    await post.save();
+
+    res.status(201).json({ message: 'Comment added successfully' });
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch comments for a post
+app.get('/get-comments/:postId', async (req, res) => {
+    const postId = req.params.postId;
+  try {
+    const post = await mongo.post.findOne({ _id: postId }).populate('comments');
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.status(200).json(post.comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// // Delete a comment
+// app.delete('/delete-comment/:commentId', async (req, res) => {
+//   const commentId = req.params.commentId;
+
+//   try {
+//     await mongo.comment.findByIdAndDelete(commentId);
+
+//     res.status(200).json({ message: 'Comment deleted successfully' });
+//   } catch (error) {
+//     console.error('Error deleting comment:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });  
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 })
