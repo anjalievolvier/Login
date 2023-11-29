@@ -94,6 +94,12 @@ const postSchema = new mongoose.Schema({
             ref: 'collection', // Reference to the user who liked the post
         },
     ],
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'comment', // Reference to the comment model
+        },
+    ],
     createdAt: {
         type: Date,
         default: Date.now,

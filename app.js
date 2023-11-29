@@ -502,8 +502,6 @@ app.post('/users/unfollow/:userId/:otherUserId', async (req, res) => {
     user.followlist = user.followlist.filter(id => id.toString() !== otherUserIdObject.toString());
     await user.save();
 
-    // console.log('After unfollow:', user.followlist);
-
     res.status(200).json({ message: 'User has unfollowed the other user' });
   } catch (error) {
     console.error('Error unfollowing user:', error);
@@ -615,7 +613,8 @@ app.post('/add-comment', async (req, res) => {
     await newComment.save();
 
     // Add the comment to the post's comments array
-    post.comments.push(newComment._id);
+    // console.log('newTd',newComment._id);
+     post.comments.push(newComment._id);
     await post.save();
 
     res.status(201).json({ message: 'Comment added successfully' });
