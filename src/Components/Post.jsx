@@ -2,15 +2,120 @@ import React from 'react';
 import { Box, Grid, Typography, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import DialogActions from '@mui/material/DialogActions';
 const Post = ({ user, posts, fetchPosts }) => {
   const [deletePostDialogOpen, setDeletePostDialogOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [likes, setLikes] = useState(0);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [likeCounts, setLikeCounts] = useState({});
+  const [postId] = useState(localStorage.getItem('postId'));
+ // const userId = user._id;
+ const userId = user ? user._id : null;
+
+  /////////////////////fetchlike
+
+
+     useEffect(() => {
+      const fetchLikeCounts = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/posts/like-counts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ postIds: posts.map(post => post._id) }),
+          });
+    
+          const data = await response.json();
+          // const newLikeCounts = { ...likeCounts }; // Copy existing likeCounts to avoid mutating state directly
+
+          // // Iterate over the keys (post IDs) in the response data
+          // Object.keys(data).forEach(postId => {
+          //   // Update the like count for the specific post
+          //   newLikeCounts[postId] = data[postId];
+          // });
+    
+          setLikeCounts(data);
+
+         
+    
+        
+        } catch (error) {
+          console.error('Error fetching like counts:', error);
+        }
+      };
+    
+      fetchLikeCounts();
+    }, [posts]);
+    
+
+
+////////////////////////handle like
+
+
+  const handleLikeClick = async (postId) => {
+    localStorage.setItem('postId',postId);
+
+    try {
+      // //Toggle like state for the post
+      // setLikes((prevLikes) => ({
+      //   ...prevLikes,
+      //   [postId]: !prevLikes[postId],
+      // }));
+  
+      // // Update the liked posts list
+      // setLikedPosts((prevLikedPosts) => {
+      //   if (prevLikedPosts.includes(postId)) {
+      //     return prevLikedPosts.filter((id) => id !== postId);
+      //   } else {
+      //     return [...prevLikedPosts, postId];
+      //   }
+      // });
+    
+      // Make the asynchronous call
+      const response = await fetch('http://localhost:8000/posts/like', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId,userId  }),
+      });
+  
+      // Check the response and update state accordingly
+      if (response.status === 200) {
+        console.log('returned');
+        const data = await response.json();
+        console.log('Number of likes for post with ID', postId, 'is', data.likes);
+        setLikeCounts((prevLikeCounts) => ({
+          ...prevLikeCounts,
+          [postId]: data.likes,
+        }));
+        setLikedPosts((prevLikedPosts) => {
+            if (prevLikedPosts.includes(postId)) {
+              return prevLikedPosts.filter((id) => id !== postId);
+            } else {
+              return [...prevLikedPosts, postId];
+            }
+          });
+      fetchPosts();
+  
+      } else {
+        console.error('Error handling like:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
+  };
+  
+  
+  
+ 
+
   const handleDeletePost = async () => {
     try {
       const response = await fetch(`http://localhost:8000/delete/posts/${selectedPostId}`, {
@@ -19,7 +124,7 @@ const Post = ({ user, posts, fetchPosts }) => {
           'Content-Type': 'application/json',
         },
       });
-      console.log('hello');
+     // console.log('hello');
       setDeletePostDialogOpen(false);
       if (response.status === 200) {
         console.log('post deleted/////////////////////////////////');
@@ -31,8 +136,8 @@ const Post = ({ user, posts, fetchPosts }) => {
       console.error('Error deleting post:', error);
     }
   };
-  console.log('userdetails', user);
-  console.log('post;;;;;', posts);
+  //console.log('userdetails', user);
+  //console.log('post;;;;;', posts);
   if (!posts || posts.length === 0) {
     console.log('not post yet');
     return null;
@@ -41,10 +146,12 @@ const Post = ({ user, posts, fetchPosts }) => {
     console.log('not post yet');
     return null;
   }
-  const handleLikeClick = () => {
-    setLikes(likes + 1);
-  };
+
+ 
+  
+  const isPostLiked = (postId) => likedPosts.includes(postId);//likedPosts is an array that look is postId present in the array
   const sortPosts = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  console.log('count of likes',likeCounts);
   return (
     <Grid container spacing={2}>
       {sortPosts.map((post) => {
@@ -115,10 +222,26 @@ const Post = ({ user, posts, fetchPosts }) => {
                     ))}
                   </Box>
                 )}
-                <div>
-                  <FavoriteBorderIcon onClick={handleLikeClick} sx={{ marginTop: '10px', }} />
-                  <Typography sx={{ fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontWeight: '400', lineHeight: '23px', letterSpacing: '0em', textAlign: 'left', }}>Likes</Typography>
+               
+                <div style={{ display: 'flex', alignItems: 'center',marginTop: '10px' }}>
+                  {isPostLiked(post._id) ? (
+                    <ThumbUpOffAltIcon
+                      onClick={() => handleLikeClick(post._id)}
+                      sx={{ color: '#180E95'}}
+
+                    />
+                  ) : (
+                    <ThumbUpOffAltIcon
+                      onClick={() => handleLikeClick(post._id)}
+                      //sx={{ marginLeft: '5px' }}
+                    />
+                  )}
+                  <Typography sx={{ fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontWeight: '400', lineHeight: '23px', letterSpacing: '0em', textAlign: 'left',marginLeft:'10px'}}>
+                  {likeCounts[post._id] || 0} Likes
+               
+                    </Typography>
                 </div>
+               
               </Box>
             </Box>
           </Grid>

@@ -80,7 +80,7 @@ const postSchema = new mongoose.Schema({
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-       ref: 'collection', // Reference to the user who created the post
+       ref: 'collection', // Reference to the user who created the post to take name
       required: true,
     },
 
@@ -100,6 +100,12 @@ const postSchema = new mongoose.Schema({
         },
       },
     ],
+    likes: [
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection', // Reference to the user who liked the post
+    },
+],
     createdAt: {
         type: Date,
         default: Date.now,

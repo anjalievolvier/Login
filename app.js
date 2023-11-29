@@ -542,6 +542,80 @@ app.delete('/delete/posts/:postId', async (req, res) => {
 });
 
 
+app.post('/posts/like', async (req, res) => {
+  const { postId, userId } = req.body;
+
+  try {
+    const post = await mongo.post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ success: false, error: 'Post not found' });
+    }
+
+    // Ensure that post.likes is defined before using indexOf
+    if (!post.likes) {
+      post.likes = [];
+    }
+
+    // Check if the user has already liked the post
+    const likedIndex = post.likes.indexOf(userId);
+
+    if (likedIndex === -1) {
+      // User hasn't liked the post, so add the user ID to the likes array
+      post.likes.push(userId);
+    } else {
+      // User has already liked the post, so remove the user ID from the likes array
+      post.likes.splice(likedIndex, 1);
+    }
+
+    // Save the updated post
+    await post.save();
+    res.status(200).json({ success: true, likes: post.likes.length });
+  } catch (error) {
+    console.error('Error handling like:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
+app.post('/posts/like-counts', async (req, res) => {
+  console.log('inside fetch likes');
+  const { postIds } = req.body;
+  console.log('postIds', postIds);
+
+  try {
+    console.log('inside try');
+
+    // Fetch posts with the specified postIds
+    const posts = await mongo.post.find({ _id: { $in: postIds } });
+    console.log('Fetched posts:', posts);
+
+    // Create an object to store like counts for each post
+    const likeCounts = {};
+
+    posts.forEach(post => {
+      // Calculate like count for the post
+      const likes = post.likes || [];
+      const likeCount = likes.length;
+
+      // Store the like count for the post
+      likeCounts[post._id] = likeCount;
+    });
+
+    console.log('likeCounts', likeCounts);
+
+    // Send the like counts in the response
+    res.json(likeCounts);
+  } catch (error) {
+    console.error('Error fetching like counts:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
 
 
 app.listen(8000, () => {
