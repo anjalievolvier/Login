@@ -69,29 +69,29 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'collection', // Reference to the user who created the post
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+       ref: 'collection', // Reference to the user who created the post
+      required: true,
     },
     text: {
         type: String,
         //  required: true,
     },
     images: [
-        {
-            url: {
-                type: String,
-                required: true,
-            },
-            description: {
-                type: String,
-            },
+      {
+        url: {
+          type: String,
+          required: true,
         },
+        description: {
+          type: String,
+        },
+      },
     ],
-    comments: [
+    likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'comment',
+            ref: 'collection', // Reference to the user who liked the post
         },
     ],
     createdAt: {
