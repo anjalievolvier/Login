@@ -3,9 +3,8 @@ import { Avatar, Box, Typography } from '@mui/material';
 
 const Comments = ({ comments }) => {
     // console.log("user",user);
-    console.log("skjhdfh",comments);
-  return (
-    
+    // console.log("skjhdfh",comments);
+  return (  
     <>
      <Box
           
@@ -50,7 +49,7 @@ const Comments = ({ comments }) => {
             >
               {comments?.firstname} {comments?.lastname}
             </Typography>
-            <Typography sx={{ marginLeft: '10px' }}>
+            <Typography >
               {comments?.text}
             </Typography>
           </Box>

@@ -22,7 +22,7 @@ function Feed() {
         const responseData = await response.json();
         // console.log('response;;;;;;;', JSON.stringify(responseData));
         setPosts(responseData);
-        // console.log("postdata;;;;",posts);
+        //  console.log("postdata;;;;",posts);
       } else {
         console.error('Error fetching posts');
       }
@@ -58,7 +58,7 @@ function Feed() {
     // fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-   const sortPosts = [...posts].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+  //  const sortPosts = [...posts].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
   //  console.log(sortPosts);
   return (
 
@@ -108,7 +108,7 @@ function Feed() {
           <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
           <Grid container item>
-            {sortPosts.map((posts,index) => (
+            {posts.map((posts,index) => (
               <Post key={index} posts={posts} fetchPosts={fetchPosts} />
             ))}
           </Grid>

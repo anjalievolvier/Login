@@ -117,14 +117,14 @@ const Post = ({ posts, fetchPosts }) => {
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
-          {posts.user && posts.user.profile && posts.user.profile[0] && posts.user.profile[0].url ? (
+          {posts.userDetails && posts.userDetails.imagePath && posts.userDetails.imagePath[0] && posts.userDetails.imagePath[0].url ? (
             <Avatar
-              src={`${posts.user.profile[0].url}?${new Date().getTime()}`}
+              src={`${posts.userDetails.imagePath[0].url}?${new Date().getTime()}`}
               sx={{ width: '47px', height: '47px', borderRadius: '50%', background: '#180E95', marginRight: '20px' }}
             />
           ) : (
             <Avatar sx={{ width: '47px', height: '47px', borderRadius: '50%', background: '#180E95', marginRight: '20px' }}>
-              {posts.user.firstname.charAt(0).toUpperCase() + posts.user.lastname.charAt(0).toUpperCase()}
+              {posts.userDetails.firstname.charAt(0).toUpperCase() + posts.userDetails.lastname.charAt(0).toUpperCase()}
             </Avatar>
           )}
           {posts.user && (
@@ -140,7 +140,7 @@ const Post = ({ posts, fetchPosts }) => {
                   textTransform: 'capitalize',
                 }}
               >
-                {posts.user.firstname} {posts.user.lastname}
+                {posts.userDetails.firstname} {posts.userDetails.lastname}
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -153,7 +153,7 @@ const Post = ({ posts, fetchPosts }) => {
                   textAlign: 'left',
                 }}
               >
-                {new Date(posts.createdTime).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {new Date(posts.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
 
               </Typography>
             </Box>

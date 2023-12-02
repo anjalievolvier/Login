@@ -373,28 +373,32 @@ app.get('/fetchposts/:userId', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     console.log('followlist;;;', user.followlist);
-    console.log('userId;;;', userId);
+    console.log('userId;;;', user._id);
     const postDetails = await mongo.post.aggregate(
       [
         {
           '$match': {
             '$or': [
               {
-                'user': new ObjectId('6555ebab2f2203b2771128fa')
+                'user': user._id
               }, {
                 'user': {
-                  '$in': [
-                    new ObjectId('654225d2c30968760ee0ceae')
-                  ]
+                  '$in': 
+                    user.followlist
+                  
                 }
               }
             ]
           }
         }, {
+          '$sort': {
+            'createdAt': -1
+          }
+        }, {
           '$lookup': {
-            'from': 'collections',
-            'localField': 'user',
-            'foreignField': '_id',
+            'from': 'collections', 
+            'localField': 'user', 
+            'foreignField': '_id', 
             'as': 'userDetails'
           }
         }, {
@@ -403,69 +407,45 @@ app.get('/fetchposts/:userId', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'comments',
-            'localField': '_id',
-            'foreignField': 'post',
+            'from': 'comments', 
+            'let': {
+              'postId': '$_id'
+            }, 
+            'pipeline': [
+              {
+                '$match': {
+                  '$expr': {
+                    '$eq': [
+                      '$post', '$$postId'
+                    ]
+                  }
+                }
+              }, {
+                '$sort': {
+                  'createdAt': -1
+                }
+              }, {
+                '$lookup': {
+                  'from': 'collections', 
+                  'localField': 'user', 
+                  'foreignField': '_id', 
+                  'as': 'userdetails'
+                }
+              }, {
+                '$unwind': {
+                  'path': '$userdetails'
+                }
+              }, {
+                '$project': {
+                  'text': '$text', 
+                  'id': '$_id', 
+                  'firstname': '$userdetails.firstname', 
+                  'lastname': '$userdetails.lastname', 
+                  'profile': '$userdetails.imagePath'
+                }
+              }
+            ], 
             'as': 'comments'
-          }
-        }, {
-          '$unwind': {
-            'path': '$comments',
-            'preserveNullAndEmptyArrays': true
-          }
-        }, {
-          '$lookup': {
-            'from': 'collections',
-            'localField': 'comments.user',
-            'foreignField': '_id',
-            'as': 'commentedUser'
-          }
-        }, {
-          '$unwind': {
-            'path': '$commentedUser',
-            'preserveNullAndEmptyArrays': true
-          }
-        }, {
-          '$group': {
-            '_id': '$_id',
-            'text': {
-              '$first': '$text'
-            },
-            'likes': {
-              '$first': '$likes'
-            },
-            'likeCount': {
-              '$first': {
-                '$size': '$likes'
-              }
-            },
-            'user': {
-              '$first': {
-                'firstname': '$userDetails.firstname',
-                'lastname': '$userDetails.lastname',
-                'profile': '$userDetails.imagePath',
-                'id': '$userDetails._id'
-              }
-            },
-            'images': {
-              '$first': '$images'
-            },
-            'createdMonth': {
-              '$first': '$createdMonth'
-            },
-            'createdTime': {
-              '$first': '$createdAt'
-            },
-
-            'comments': {
-              '$push': {
-                'text': '$comments.text',
-                'id': '$comments.user',
-                'firstname': '$commentedUser.firstname',
-                'lastname': '$commentedUser.lastname',
-                'profile': '$commentedUser.imagePath'
-              }
-            }
           }
         }
       ]
