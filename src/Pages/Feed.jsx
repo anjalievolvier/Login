@@ -20,7 +20,9 @@ function Feed() {
       const response = await fetch(`http://localhost:8000/fetchposts/${userId}`);
       if (response.status === 200) {
         const responseData = await response.json();
-        setPosts(responseData.posts);
+        // console.log('response;;;;;;;', JSON.stringify(responseData));
+        setPosts(responseData);
+        // console.log("postdata;;;;",posts);
       } else {
         console.error('Error fetching posts');
       }
@@ -28,16 +30,9 @@ function Feed() {
       console.error('Error fetching posts:', error);
     }
   };
-  // const fetchComments = async (postId) => {
-  //   // API call to get comments for a post
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/get-comments/${postId}`);
-  //     const data = await response.json();
-  //     setComments(data.comments);
-  //   } catch (error) {
-  //     console.error('Error fetching comments:', error);
-  //   }
-  // };
+  // useEffect(() => {
+  //   console.log('postss;;;;;;;;;;', posts)
+  // }, [posts])
   useEffect(() => {
     // Fetch the user details using the user ID and the authToken
     const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
@@ -63,7 +58,8 @@ function Feed() {
     // fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+   const sortPosts = [...posts].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+  //  console.log(sortPosts);
   return (
 
     <Box>
@@ -88,16 +84,14 @@ function Feed() {
                       borderRadius: '50%',
                       background: '#180E95',
                       marginRight: '20px',
-                      marginTop:'10px'
+                      marginTop: '10px'
                     }} />
                 </Link>
-
               ) : (
                 <Link to='/home'>
-                  <AccountCircleIcon style={{ color: 'white',marginTop:'20px' }} />
+                  <AccountCircleIcon style={{ color: 'white', marginTop: '20px' }} />
                 </Link>
               )}
-
             </Box>
           </Box>
         </AppBar>
@@ -113,7 +107,11 @@ function Feed() {
         >
           <Search user={user} fetchPosts={fetchPosts} />
           <Caption user={user} fetchPosts={fetchPosts} />
-          <Post user={user} posts={posts} fetchPosts={fetchPosts}/>
+          <Grid container item>
+            {sortPosts.map((posts,index) => (
+              <Post key={index} posts={posts} fetchPosts={fetchPosts} />
+            ))}
+          </Grid>
         </Grid>
       </form>
 

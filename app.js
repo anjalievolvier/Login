@@ -10,7 +10,6 @@ const { ObjectId } = require('mongodb');
 // const multer = require("multer"); // Import multer for handling file uploads
 const path = require("path");
 const fileUpload = require('express-fileupload');
-
 const fs = require("fs");
 // const { promisify } = require("util");
 app.use(fileUpload());
@@ -18,18 +17,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.get("/", cors(), (req, res) => {
-
 })
-
-
 //Login
 app.post("/", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await mongo.collection.findOne({ email: email });
-
-
     if (user) {
 
       // Compare the hashed password with the provided password
@@ -378,18 +372,109 @@ app.get('/fetchposts/:userId', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    console.log('followlist;;;', user.followlist);
+    console.log('userId;;;', userId);
+    const postDetails = await mongo.post.aggregate(
+      [
+        {
+          '$match': {
+            '$or': [
+              {
+                'user': new ObjectId('6555ebab2f2203b2771128fa')
+              }, {
+                'user': {
+                  '$in': [
+                    new ObjectId('654225d2c30968760ee0ceae')
+                  ]
+                }
+              }
+            ]
+          }
+        }, {
+          '$lookup': {
+            'from': 'collections',
+            'localField': 'user',
+            'foreignField': '_id',
+            'as': 'userDetails'
+          }
+        }, {
+          '$unwind': {
+            'path': '$userDetails'
+          }
+        }, {
+          '$lookup': {
+            'from': 'comments',
+            'localField': '_id',
+            'foreignField': 'post',
+            'as': 'comments'
+          }
+        }, {
+          '$unwind': {
+            'path': '$comments',
+            'preserveNullAndEmptyArrays': true
+          }
+        }, {
+          '$lookup': {
+            'from': 'collections',
+            'localField': 'comments.user',
+            'foreignField': '_id',
+            'as': 'commentedUser'
+          }
+        }, {
+          '$unwind': {
+            'path': '$commentedUser',
+            'preserveNullAndEmptyArrays': true
+          }
+        }, {
+          '$group': {
+            '_id': '$_id',
+            'text': {
+              '$first': '$text'
+            },
+            'likes': {
+              '$first': '$likes'
+            },
+            'likeCount': {
+              '$first': {
+                '$size': '$likes'
+              }
+            },
+            'user': {
+              '$first': {
+                'firstname': '$userDetails.firstname',
+                'lastname': '$userDetails.lastname',
+                'profile': '$userDetails.imagePath',
+                'id': '$userDetails._id'
+              }
+            },
+            'images': {
+              '$first': '$images'
+            },
+            'createdMonth': {
+              '$first': '$createdMonth'
+            },
+            'createdTime': {
+              '$first': '$createdAt'
+            },
 
-    // Find posts for the logged-in user
-    const userPosts = await mongo.post.find({ user: userId }).populate('user');
-
-    // Find posts for users in the user's followlist
-    const followedPosts = await mongo.post.find({ user: { $in: user.followlist } }).populate('user');
-
-    // Combine and sort the posts by timestamp
-    const allPosts = [...userPosts, ...followedPosts].sort((a, b) => b.timestamp - a.timestamp);
+            'comments': {
+              '$push': {
+                'text': '$comments.text',
+                'id': '$comments.user',
+                'firstname': '$commentedUser.firstname',
+                'lastname': '$commentedUser.lastname',
+                'profile': '$commentedUser.imagePath'
+              }
+            }
+          }
+        }
+      ]
+    ).exec();
 
     // Return user details along with posts
-    res.status(200).json({ posts: allPosts, user: { _id: user._id, firstname: user.firstname, lastname: user.lastname, imagePath: user.imagePath } });
+    console.log('post details;;;;;;;;;;;;', postDetails)
+    res.status(200).json(postDetails);
+
   } catch (error) {
     console.error('Error fetching posts for the feed:', error);
     res.status(500).json({ message: 'Error fetching posts for the feed' });
@@ -555,41 +640,6 @@ app.post('/posts/like', async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
-
-app.post('/posts/like-counts', async (req, res) => {
-  console.log('inside fetch likes');
-  const { postIds } = req.body;
-  console.log('postIds', postIds);
-
-  try {
-    console.log('inside try');
-
-    // Fetch posts with the specified postIds
-    const posts = await mongo.post.find({ _id: { $in: postIds } });
-    console.log('Fetched posts:', posts);
-
-    // Create an object to store like counts for each post
-    const likeCounts = {};
-
-    posts.forEach(post => {
-      // Calculate like count for the post
-      const likes = post.likes || [];
-      const likeCount = likes.length;
-
-      // Store the like count for the post
-      likeCounts[post._id] = likeCount;
-    });
-
-    console.log('likeCounts', likeCounts);
-
-    // Send the like counts in the response
-    res.json(likeCounts);
-  } catch (error) {
-    console.error('Error fetching like counts:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 // Add comment to a post
 app.post('/add-comment', async (req, res) => {
   const { postId, userId, text } = req.body;
@@ -611,10 +661,7 @@ app.post('/add-comment', async (req, res) => {
       text,
     });
     await newComment.save();
-
-    // Add the comment to the post's comments array
-    // console.log('newTd',newComment._id);
-     post.comments.push(newComment._id);
+    post.comments.push(newComment._id);
     await post.save();
 
     res.status(201).json({ message: 'Comment added successfully' });
@@ -623,35 +670,6 @@ app.post('/add-comment', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-// Fetch comments for a post
-app.get('/get-comments/:postId', async (req, res) => {
-  const postId = req.params.postId;
-  try {
-    const post = await mongo.post.findOne({ _id: postId }).populate('comments');
-
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.status(200).json(post.comments);
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-// // Delete a comment
-// app.delete('/delete-comment/:commentId', async (req, res) => {
-//   const commentId = req.params.commentId;
-
-//   try {
-//     await mongo.comment.findByIdAndDelete(commentId);
-
-//     res.status(200).json({ message: 'Comment deleted successfully' });
-//   } catch (error) {
-//     console.error('Error deleting comment:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });  
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 })

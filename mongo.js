@@ -70,7 +70,7 @@ const postSchema = new mongoose.Schema({
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-       ref: 'collection', // Reference to the user who created the post
+       ref: 'collection', 
       required: true,
     },
     text: {
@@ -91,13 +91,13 @@ const postSchema = new mongoose.Schema({
     likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'collection', // Reference to the user who liked the post
+            ref: 'collection',
         },
     ],
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'comment', // Reference to the comment model
+            ref: 'comment',
         },
     ],
     createdAt: {
