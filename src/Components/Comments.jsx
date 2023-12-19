@@ -2,8 +2,6 @@ import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 
 const Comments = ({ comments }) => {
-    // console.log("user",user);
-    // console.log("skjhdfh",comments);
   return (  
     <>
      <Box

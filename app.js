@@ -1,21 +1,27 @@
 const express = require("express")
-// const collection = require("./mongo")
-// const post = require('./mongo'); 
 const mongo = require("./mongo")
 const cors = require("cors")
 const app = express()
 const bcrypt = require("bcrypt");
 const crypto = require('crypto');
 const { ObjectId } = require('mongodb');
-// const multer = require("multer"); // Import multer for handling file uploads
 const path = require("path");
 const fileUpload = require('express-fileupload');
 const fs = require("fs");
-// const { promisify } = require("util");
+const http = require('http');
+const { Server } = require('socket.io');
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+});
 app.use(fileUpload());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+
 app.get("/", cors(), (req, res) => {
 })
 //Login
@@ -102,8 +108,7 @@ app.post("/signup", async (req, res) => {
             phone: phone
           };
 
-          // const newUser = new collection(data);
-          // await newUser.save();
+
 
           console.log("User registered:");
           res.json("not exist");
@@ -172,7 +177,7 @@ app.post("/logout", async (req, res) => {
 // Define a route for updating user profile
 app.put("/user/:id", async (req, res) => {
   const userId = req.params.id;
-  const updatedUser = req.body; // This should contain the updated user data
+  const updatedUser = req.body;
 
   try {
     // Use MongoDB update methods (e.g., findOneAndUpdate) to update the user
@@ -372,8 +377,8 @@ app.get('/fetchposts/:userId', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log('followlist;;;', user.followlist);
-    console.log('userId;;;', user._id);
+    //  console.log('followlist;;;', user.followlist);
+    // console.log('userId;;;', user._id);
     const postDetails = await mongo.post.aggregate(
       [
         {
@@ -383,9 +388,9 @@ app.get('/fetchposts/:userId', async (req, res) => {
                 'user': user._id
               }, {
                 'user': {
-                  '$in': 
+                  '$in':
                     user.followlist
-                  
+
                 }
               }
             ]
@@ -396,9 +401,9 @@ app.get('/fetchposts/:userId', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'collections', 
-            'localField': 'user', 
-            'foreignField': '_id', 
+            'from': 'collections',
+            'localField': 'user',
+            'foreignField': '_id',
             'as': 'userDetails'
           }
         }, {
@@ -407,10 +412,10 @@ app.get('/fetchposts/:userId', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'comments', 
+            'from': 'comments',
             'let': {
               'postId': '$_id'
-            }, 
+            },
             'pipeline': [
               {
                 '$match': {
@@ -426,9 +431,9 @@ app.get('/fetchposts/:userId', async (req, res) => {
                 }
               }, {
                 '$lookup': {
-                  'from': 'collections', 
-                  'localField': 'user', 
-                  'foreignField': '_id', 
+                  'from': 'collections',
+                  'localField': 'user',
+                  'foreignField': '_id',
                   'as': 'userdetails'
                 }
               }, {
@@ -437,22 +442,38 @@ app.get('/fetchposts/:userId', async (req, res) => {
                 }
               }, {
                 '$project': {
-                  'text': '$text', 
-                  'id': '$_id', 
-                  'firstname': '$userdetails.firstname', 
-                  'lastname': '$userdetails.lastname', 
+                  'text': '$text',
+                  'id': '$_id',
+                  'firstname': '$userdetails.firstname',
+                  'lastname': '$userdetails.lastname',
                   'profile': '$userdetails.imagePath'
                 }
               }
-            ], 
+            ],
             'as': 'comments'
+          }
+        },
+        {
+          '$project': {
+            'username': 1,
+            'user': 1,
+            'text': 1,
+            'images': 1,
+            'comments': 1,
+            'createdMonth': 1,
+            'createdAt': 1,
+            'likes': 1,
+            'userDetails': 1,
+            'likeCount': {
+              '$size': '$likes'
+            }
           }
         }
       ]
     ).exec();
 
     // Return user details along with posts
-    console.log('post details;;;;;;;;;;;;', postDetails)
+    // console.log('post details;;;;;;;;;;;;', postDetails)
     res.status(200).json(postDetails);
 
   } catch (error) {
@@ -495,7 +516,7 @@ app.get('/users/search', async (req, res) => {
       ],
     });
 
-    console.log('searchResults', searchResults);
+    // console.log('searchResults', searchResults);
     res.json({ users: searchResults });
   } catch (error) {
     console.error('Error fetching users from the database:', error);
@@ -650,6 +671,74 @@ app.post('/add-comment', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+//////////// Chat
+
+app.post('/chat/create', async (req, res) => {
+  try {
+    const { user1, user2 } = req.body;
+// console.log('users.....',user1 , user2)
+    // Check if a chat room already exists for these users
+    const existingChat = await mongo.chat.findOne({
+      $or: [
+        { user1, user2 },
+        { user1: user2, user2: user1 },
+      ],
+    });
+
+    let roomId;
+
+    if (existingChat) {
+      // Use the existing chat room
+      roomId = existingChat._id.toString();
+    } else {
+      // Create a new chat room with a unique ObjectId as _id
+      const newChat = new mongo.chat({
+        user1,
+        user2,
+        roomId: new ObjectId().toString(),
+      });
+
+      const savedChat = await newChat.save();
+      roomId = savedChat._id.toString();
+    }
+
+    // Respond with the roomId
+    res.status(200).json({ roomId });
+  } catch (error) {
+    console.error('Error creating/retrieving chat room:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+io.on('connection', (socket) => {
+  // console.log('User connected');
+
+  socket.on('subscribe', ({ sender, recipient }) => {
+    socket.join(`${sender}-${recipient}`);
+  });
+
+  socket.on('unsubscribe', ({ sender, recipient }) => {
+    socket.leave(`${sender}-${recipient}`);
+  });
+
+  socket.on('message', ({ sender, recipient, text }) => {
+    const message = { sender, recipient, text };
+    io.to(`${sender}-${recipient}`).to(`${recipient}-${sender}`).emit('message', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+httpServer.listen(8001, () => {
+  console.log('Socket.IO server is running on port 8001');
+});
+
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 })

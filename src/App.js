@@ -8,11 +8,6 @@ import PublicRoute from './Components/PublicRoute';
 import {BrowserRouter as Router, Routes, Route,} from "react-router-dom";
 
 function App() {
-  // const isAuthenticated = localStorage.getItem("authToken") ? true : false;
-  // useEffect(() => { }, [isAuthenticated])
-  // // Check if the user is authenticated based on the authentication token in local storage.
-  // // const isAuthenticated = localStorage.getItem("authToken") ? true : false;
-  // console.log('console', isAuthenticated)
   return (
     <div className="App">
       <Router>

@@ -4,25 +4,25 @@ import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Caption from '../Components/Caption';
 import Logo from '../Components/Logo';
+// import Chat from '../Components/Chat';
 import AppBar from '@mui/material/AppBar';
 import { Avatar, Box, Grid } from '@mui/material';
 import Post from '../Components/Post';
 import Search from '../Components/Search';
+import ChatList from '../Components/ChatList';
 import axios from 'axios';
 function Feed() {
   const [user, setUser] = useState(null);
   const [userId] = useState(localStorage.getItem('userId'));
   const [posts, setPosts] = useState([]);
-  // const [comments, setComments] = useState([]);
-  // Fetch posts from the server when the component mounts
+  // const [followList, setFollowList] = useState([]);
+
   const fetchPosts = async () => {
     try {
       const response = await fetch(`http://localhost:8000/fetchposts/${userId}`);
       if (response.status === 200) {
         const responseData = await response.json();
-        // console.log('response;;;;;;;', JSON.stringify(responseData));
         setPosts(responseData);
-        //  console.log("postdata;;;;",posts);
       } else {
         console.error('Error fetching posts');
       }
@@ -30,9 +30,7 @@ function Feed() {
       console.error('Error fetching posts:', error);
     }
   };
-  // useEffect(() => {
-  //   console.log('postss;;;;;;;;;;', posts)
-  // }, [posts])
+  
   useEffect(() => {
     // Fetch the user details using the user ID and the authToken
     const authToken = localStorage.getItem('authToken'); // Get the authentication token from local storage
@@ -55,16 +53,16 @@ function Feed() {
     }
 
     fetchPosts()
-    // fetchComments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  //  const sortPosts = [...posts].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
-  //  console.log(sortPosts);
+
+console.log(user)
+
   return (
 
     <Box>
       <form encType="multipart/form-data" >
-        <AppBar position="static" sx={{ backgroundColor: '#180E95', paddingLeft: '20px', paddingRight: '30px' }}>
+        <AppBar position="fixed" sx={{ backgroundColor: '#180E95', paddingLeft: '20px', paddingRight: '30px' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Logo />
             <Box
@@ -72,6 +70,7 @@ function Feed() {
                 display: 'flex',
                 justifyContent: 'flex-end'
               }}>
+              {/* <Chat user={user}/> */}
               {user && user.imagePath && user.imagePath.length && user.imagePath[0] && user.imagePath[0].url ? (
 
                 // Display the uploaded avatar 
@@ -96,27 +95,43 @@ function Feed() {
           </Box>
         </AppBar>
         <Grid container
-          sx={{
-            display: "flex",
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: { xs: '50px', sm: '100px', md: '200px', lg: '300px', xl: '400px' },
-            paddingRight: { xs: '50px', sm: '100px', md: '200px', lg: '300px', xl: '400px' },
-          }}
-        >
-          <Search user={user} fetchPosts={fetchPosts} />
-          <Caption user={user} fetchPosts={fetchPosts} />
-          <Grid container item>
-            {posts.map((posts,index) => (
-              <Post key={index} posts={posts} fetchPosts={fetchPosts} />
-            ))}
+          spacing={2}>
+          <Grid item xs={6} sx={{ paddingLeft: '20px', marginRight: 'auto' , 
+          marginLeft:  { xs: '70px', sm: '100px', md: '200px', lg: '200px', xl: '270px' },
+          }}>
+            <Search user={user} fetchPosts={fetchPosts} />
+            <Caption user={user} fetchPosts={fetchPosts} />
+            <Grid container>
+              {posts.map((posts, index) => (
+                <Post key={index} posts={posts} fetchPosts={fetchPosts} />
+              ))}
+            </Grid>
           </Grid>
+          {/* <Grid item xs={3} sx={{ background: 'yellow', padding: '20px', marginTop:'70px'}}>
+             <ChatList /> 
+          </Grid>  */}
+          <Grid item xs={2.5} sx={{ padding: '20px', marginTop:'70px'}}>
+            <Box
+            position="fixed"
+            sx={{
+              // marginRight:'10px',
+              width: '100%',
+              height:'675px',
+              // borderRadius: '20px',
+              backgroundColor: '#FFFFFF',
+              boxShadow: 4,
+              marginTop: '5px',
+              marginBottom: '10px',
+               padding: '10px'
+            }}>
+        <ChatList followList={user && user.followlist} user={user}/>
+        </Box>
+      </Grid>
         </Grid>
+
       </form>
 
     </Box>
-
 
   );
 }

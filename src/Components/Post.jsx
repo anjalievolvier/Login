@@ -10,15 +10,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import InputAdornment from '@mui/material/InputAdornment';
 import Comments from './Comments';
 
-
 const Post = ({ posts, fetchPosts }) => {
-  console.log('comments;;;',posts)
+  
+  // console.log('comments;;;', posts)
   const [newComment, setNewComment] = useState('');
   const [userId] = useState(localStorage.getItem('userId'));
   const [deletePostDialogOpen, setDeletePostDialogOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   // const [likeCounts, setLikeCounts] = useState({});
   const [likedPosts, setLikedPosts] = useState([]);
+  // console.log('postsUserid',posts.userDetails)
   const handleLikeClick = async (postId) => {
     try {
       // Make the asynchronous call
@@ -104,7 +105,7 @@ const Post = ({ posts, fetchPosts }) => {
   };
   const isPostLiked = (postId) => likedPosts.includes(postId);
   return (
-    <Grid item key={posts._id} xs={12}>
+    <Grid container item key={posts._id} xs={12}>
       <Box
         sx={{
           width: '100%',
@@ -158,7 +159,7 @@ const Post = ({ posts, fetchPosts }) => {
               </Typography>
             </Box>
           )}
-          {posts.user && posts.user.id === userId && (
+          {posts.userDetails && posts.userDetails._id === userId && (
             <MoreVertIcon
               sx={{ color: '#180E95', cursor: 'pointer', marginLeft: 'auto' }}
               onClick={() => {
@@ -179,7 +180,13 @@ const Post = ({ posts, fetchPosts }) => {
         <Box sx={{ padding: '0px 10px 10px 10px' }}>
           <Box>
             {posts.text && (
-              <Typography variant="body1" sx={{ fontFamily: 'Aleo, sans-serif', fontSize: '16px', fontWeight: '400', lineHeight: '20px', letterSpacing: '0em', textAlign: 'left' }}>
+              <Typography variant="body1" 
+              sx={{ fontFamily: 'Aleo, sans-serif', 
+              fontSize: '16px', 
+              fontWeight: '400',
+               lineHeight: '20px',
+                letterSpacing: '0em', 
+                textAlign: 'left' }}>
                 {posts.text}
               </Typography>
             )}
@@ -206,7 +213,15 @@ const Post = ({ posts, fetchPosts }) => {
               sx={{ paddingLeft: '15px' }}
             />
           )}
-          <Typography sx={{ fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontWeight: '400', lineHeight: '23px', letterSpacing: '0em', textAlign: 'left', marginLeft: '10px' }}>
+          <Typography sx={{
+            fontFamily: 'Aleo, sans-serif',
+            fontSize: '15px',
+            fontWeight: '400',
+            lineHeight: '23px',
+            letterSpacing: '0em',
+            textAlign: 'left',
+            marginLeft: '10px'
+          }}>
             {posts.likeCount || 0} Likes
           </Typography>
         </div>
@@ -251,25 +266,20 @@ const Post = ({ posts, fetchPosts }) => {
         </Box>
         <Box
           sx={{ paddingLeft: '15px' }}>
-            {/* <Comments comments={posts.comments} user={posts.commentUser} /> */}
-            {
-              posts?.comments?.map((comments,i)=>{
-                console.log('')
-                if(comments.text) {
-                  return(
-                    <Comments key={i} comments={comments} />
-                  )
-                }
-                else
-                {
-                  return null;
-                }
-              })
+          {
+            posts?.comments?.map((comments, i) => {
+              console.log('')
+              if (comments.text) {
+                return (
+                  <Comments key={i} comments={comments} />
+                )
+              }
+              else {
+                return null;
+              }
+            })
 
-            }
-            {/* {posts?.map((comments) => (
-              <Comments key={comments?.id} comments={comments?.comments} user={comments?.commentUser} />
-            ))} */}
+          }
         </Box>
       </Box>
     </Grid >

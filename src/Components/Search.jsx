@@ -12,6 +12,7 @@ const Search = ({ user, fetchPosts }) => {
     const response = await fetch(`http://localhost:8000/users/search?query=${searchQuery}`);
     if (response.status === 200) {
       const searchData = await response.json();
+      setSearchQuery("");
       console.log('searchData', searchData);
       setSearchResults(searchData.users);
     } else {
@@ -51,8 +52,9 @@ const Search = ({ user, fetchPosts }) => {
           Search friends
         </Typography>)}
         onChange={(e) => setSearchQuery(e.target.value)}
+        value={searchQuery}
         placeholder='search' variant='outlined'
-        sx={{ width: '100%', flexShrink: 0, borderRadius: '10px', background: '#FFFFFF', border: '1px solid #DEDEDE', marginTop: '30px', outline: 'none' }}
+        sx={{ width: '100%', flexShrink: 0, borderRadius: '10px', background: '#FFFFFF', border: '1px solid #DEDEDE', marginTop: '100px', outline: 'none' }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

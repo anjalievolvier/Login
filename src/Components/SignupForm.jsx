@@ -3,7 +3,18 @@ import axios from "axios";
 import { TextField, Typography, Button, InputAdornment, IconButton, Grid, Select, MenuItem, FormControl, InputLabel, } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+
+const styles = {
+    placeholder: {
+      color: '#31304D', 
+    //   fontStyle: 'normal', 
+      fontFamily: 'Aleo, sans-serif',
+       fontSize: '15px',
+       fontWeight: '400'
+    },
+  };
 function SignupForm({ userData, onClose }) {
+
     const history = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -115,26 +126,35 @@ function SignupForm({ userData, onClose }) {
                     gap={{ xs: '10px', lg: '20px' }} paddingTop={'25px'}
                     flexDirection={{ xs: 'column', md: 'row', lg: 'row' }} >
                     <TextField
+                     sx={{ borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         onChange={(e) => setFirstname(e.target.value)}
                         name="firstname"
                         value={firstname}
-                        label={
-                            <Typography
-                                sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                                First name
-                            </Typography>
-                        }
-                        sx={{ borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
+                        placeholder='First name'
+                        InputProps={{
+                            style: styles.placeholder,
+                          }}
+                        // label={
+                        //     <Typography
+                        //         sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //         First name
+                        //     </Typography>
+                        // }
+                       
                         id="outlined-size-small" size="small" flex={1} />
                     <TextField
                         onChange={(e) => setLastname(e.target.value)}
                         name="lastname"
                         value={lastname}
-                        label={<Typography
-                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                            Last name
-                        </Typography>
-                        }
+                        placeholder='Last name'
+                        InputProps={{
+                            style: styles.placeholder,
+                          }}
+                        // label={<Typography
+                        //     sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //     Last name
+                        // </Typography>
+                        // }
                         sx={{ borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         id="outlined-size-small" size="small" flex={1} />
                 </Grid>
@@ -143,11 +163,15 @@ function SignupForm({ userData, onClose }) {
                         onChange={(e) => setEmail(e.target.value)}
                         name="email"
                         value={email}
-                        label={<Typography
-                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                            Email
-                        </Typography>
-                        }
+                        placeholder='Email'
+                        InputProps={{
+                            style: styles.placeholder,
+                          }}
+                        // label={<Typography
+                        //     sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //     Email
+                        // </Typography>
+                        // }
                         sx={{ width: '100%', borderRadius: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         id="outlined-size-small" size="small" error={emailError}
                         helperText={emailError ? "Invalid email address" : ""} />
@@ -157,11 +181,15 @@ function SignupForm({ userData, onClose }) {
                     <TextField
                         onChange={(e) => setPassword(e.target.value)}
                         name="password"
-                        label={<Typography
-                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                            Password
-                        </Typography>
-                        }
+                        placeholder='Password'
+                        // InputProps={{
+                        //     style: styles.placeholder,
+                        //   }}
+                        // label={<Typography
+                        //     sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //     Password
+                        // </Typography>
+                        // }
                         sx={{ width: '100%', borderRadius: 0, flexShrink: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         id="outlined-size-small"
                         size="small"
@@ -173,6 +201,8 @@ function SignupForm({ userData, onClose }) {
                                 : ""
                         }
                         InputProps={{
+                                style: styles.placeholder,
+                              
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
@@ -191,17 +221,19 @@ function SignupForm({ userData, onClose }) {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         name="ConfirmPassword"
                         value={ConfirmPassword}
-                        label={<Typography
-                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                            Confirm Password
-                        </Typography>
-                        }
+                        // label={<Typography
+                        //     sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //     Confirm Password
+                        // </Typography>
+                        // }
+                        placeholder='Confirm Password'
                         sx={{ width: '100%', borderRadius: 0, flexShrink: 0, border: '1px solid #736EFF', background: '#FFFCF3', }}
                         id="outlined-size-small" size="small"
                         type={showPassword ? "text" : "password"}
                         error={passwordError}
                         helperText={passwordError ? "Passwords do not match" : ""}
                         InputProps={{
+                            style: styles.placeholder,
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
@@ -219,11 +251,15 @@ function SignupForm({ userData, onClose }) {
                     <TextField onChange={(e) => setPhone(e.target.value)}
                         name="phone"
                         value={phone}
-                        label={<Typography
-                            sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
-                            Mobile Number
-                        </Typography>
-                        }
+                        // label={<Typography
+                        //     sx={{ color: '#B4B4B4', fontFamily: 'Aleo, sans-serif', fontSize: '15px', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal', }}>
+                        //     Mobile Number
+                        // </Typography>
+                        // }
+                        placeholder='Mobile Number'
+                        InputProps={{
+                            style: styles.placeholder,
+                          }}
                         sx={{width: '100%',flexShrink: 0,borderRadius: 0,border: '1px solid #736EFF',background: '#FFFCF3',}}
                         id="outlined-size-small" size="small"
                         error={phoneError}

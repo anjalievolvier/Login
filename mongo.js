@@ -132,6 +132,56 @@ const commentSchema = new mongoose.Schema({
     },
 });
 const comment = mongoose.model('comment', commentSchema);
+const chatSchema = new mongoose.Schema({
+    user1: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection',
+        required: true,
+    },
+    user2: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection',
+        required: true,
+    },
+    roomId: {
+        type: String,
+        unique: true,
+         required: true,
+    },
+});
+
+const chat = mongoose.model('chat', chatSchema);
+
+const chatMessageSchema = new mongoose.Schema({
+    sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection',
+        required: true,
+    },
+    receiver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'collection',
+        required: true,
+    },
+    chatId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'chat',
+        required: true,
+    },
+    text: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
+const chatMessage = mongoose.model('chatMessage', chatMessageSchema);
+
+module.exports.chat = chat;
+module.exports.chatMessage = chatMessage;
 module.exports.comment = comment;
 module.exports.collection = collection;
 module.exports.post = post;

@@ -48,7 +48,7 @@ const Home = () => {
 
   return (
     <Box>
-      <AppBar position="static" sx={{ backgroundColor: '#180E95', paddingLeft:'20px',paddingRight:'30px' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: '#180E95', paddingLeft:'20px',paddingRight:'30px' }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <Logo />
       <Box
@@ -87,6 +87,7 @@ const Home = () => {
           textAlign:'left',
           }}>
             <Typography sx={{
+              marginTop:'100px',
             color: '#000',
             fontFamily: 'Aleo, sans-serif',
             fontSize: '30px',
