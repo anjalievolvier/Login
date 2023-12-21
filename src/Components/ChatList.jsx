@@ -56,6 +56,11 @@ const ChatList = ({ followList,user }) => {
       console.error('Error creating/retrieving chat room:', error);
     }
   };
+  const handleCloseChat = () => {
+    // Unsubscribe from the chat room when closing
+    socket.emit('unsubscribe', { sender: user._id, recipient: selectedUser._id, roomId: selectedUser.roomId });
+    setSelectedUser(null);
+  };
 // console.log('roomId',selectedUser.roomId)
   return (
     <div>
@@ -93,7 +98,7 @@ const ChatList = ({ followList,user }) => {
         </Box>
       ))}
     </List>
-    {selectedUser && <Chat user={user} recipient={selectedUser} roomId={selectedUser.roomId}/>}
+    {selectedUser && <Chat user={user} recipient={selectedUser} roomId={selectedUser.roomId}  onClose={handleCloseChat}/>}
     </div>
   );
 };

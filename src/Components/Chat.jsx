@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, InputAdornment, IconButton,} from '@mui/material';
+import { Box, TextField, InputAdornment, IconButton, Avatar, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import CloseIcon from '@mui/icons-material/Close';
 import io from 'socket.io-client';
 
 const socket = io('http://localhost:8001');
@@ -65,6 +66,7 @@ const Chat = ({ user, recipient, roomId, onClose }) => {
       console.error('Error saving message:', error);
     }
   };
+  console.log('hgdfhgafkj',messages)
 
   const scrollToBottom = () => {
     chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
@@ -74,60 +76,139 @@ const Chat = ({ user, recipient, roomId, onClose }) => {
     <Box
       sx={{
         position: 'fixed',
-        marginRight:'100px',
+        marginRight: '100px',
         bottom: '10px',
         right: '10px',
         width: '300px',
         height: '400px',
         border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '10px',
-        zIndex: 999,
+        borderRadius: '10px',
         backgroundColor: '#ffffff',
-        boxShadow:4,
+        boxShadow: 4,
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
+      {/* Header with recipient's profile picture, name, and close icon */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '10px',
+          backgroundColor: '#180E95',
+          padding: '10px',
+          borderRadius: '10px 10px 0 0',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar src={`${recipient.imagePath[0].url}?${new Date().getTime()}`} />
+          <Box sx={{ marginLeft: '10px' }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: '#FFF',
+                fontFamily: 'Aleo, sans-serif',
+                fontSize: '18px',
+                fontWeight: '700',
+                lineHeight: '23px',
+                letterSpacing: '0em',
+                textAlign: 'left',
+                textTransform: 'capitalize',
+              }}
+            >
+              {recipient.firstname} {recipient.lastname}
+            </Typography>
+          </Box>
+        </Box>
+        <IconButton onClick={onClose} sx={{ color: '#FFF' }}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
       <Box
         ref={chatBoxRef}
-        style={{ height: '300px', overflowY: 'scroll', padding: '10px' }}
+        sx={{ flex: 1, overflowY: 'scroll', padding: '10px',display:'flex',flexDirection:'column' }}
       >
+        {/* <Avatar
+              src={`${recipient.imagePath[0].url}?${new Date().getTime()}`}
+              sx={{
+                width: '35px',
+                height: '35px',
+                borderRadius: '50%',
+                background: '#180E95',
+                marginRight: '20px',
+              }}
+            /> */}
         {messages.map((message, index) => (
           <Box
             key={index}
             sx={{
               display: 'flex',
               margin: '10px',
-              width: '80%',
-              border: '1px solid #ccc',
-              background: '#F8F7F7',
-              borderRadius: '10px',
-              padding: '10px',
+              borderRadius: '100px',
+              padding: '7px 15px',
+              alignSelf: message.senderId === user._id ? 'flex-end' : 'flex-start',
+              backgroundColor: message.senderId === user._id ? '#D5FFD0' : '#CAEDFF',
             }}
           >
-            <strong>{message.senderId === user._id ? user.firstname : recipient.firstname}</strong>: {message.text}
+            <Typography
+              variant="body1"
+              sx={{
+                fontFamily: 'Aleo, sans-serif',
+                fontSize: '15px',
+                fontWeight: '700',
+                lineHeight: '24px',
+                letterSpacing: '0em',
+                textTransform: 'capitalize',
+                
+              }}
+            >
+              {message.senderId === user._id ? user.firstname : recipient.firstname}:
+            </Typography>
+            <Typography
+            sx={{
+              fontFamily: 'Aleo, sans-serif',
+              fontSize: '15px',
+              fontWeight: '400',
+              lineHeight: '24px',
+              letterSpacing: '0em',
+              textTransform: 'capitalize',
+              marginLeft:'5px',
+            }}
+            >{message.text}</Typography>
           </Box>
         ))}
       </Box>
-      <TextField
-        placeholder="Type your message"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={sendMessage}>
-                <SendIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
+      <Box
+        sx={{
+          padding: '0 25px 0 10px',
         }}
-      />
-      <IconButton onClick={onClose} sx={{ marginTop: '10px' }}>
-        Close
-      </IconButton>
+      >
+        <TextField
+          placeholder="Type your message"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={sendMessage}>
+                  <SendIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            width: '100%',
+            borderRadius: '0 0 10px 10px',
+            marginLeft: '10px',
+            marginRight: '10px',
+          }}
+        />
+      </Box>
     </Box>
   );
 };
