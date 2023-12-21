@@ -96,8 +96,9 @@ console.log(user)
         </AppBar>
         <Grid container
           spacing={2}>
-          <Grid item xs={6} sx={{ paddingLeft: '20px', marginRight: 'auto' , 
-          marginLeft:  { xs: '70px', sm: '100px', md: '200px', lg: '200px', xl: '270px' },
+          <Grid item xs={6} sx={{ paddingLeft: '20px',
+          width:'60%',
+           marginLeft: { xs: '70px', sm: '100px', md: '200px', lg: '200px', xl: '270px' },
           }}>
             <Search user={user} fetchPosts={fetchPosts} />
             <Caption user={user} fetchPosts={fetchPosts} />
@@ -107,15 +108,14 @@ console.log(user)
               ))}
             </Grid>
           </Grid>
-          {/* <Grid item xs={3} sx={{ background: 'yellow', padding: '20px', marginTop:'70px'}}>
-             <ChatList /> 
-          </Grid>  */}
+
           <Grid item xs={2.5} sx={{ padding: '20px', marginTop:'70px'}}>
             <Box
             position="fixed"
             sx={{
-              // marginRight:'10px',
-              width: '100%',
+              marginLeft:'155px',
+              marginRight:'150px',
+              width: '20%',
               height:'675px',
               // borderRadius: '20px',
               backgroundColor: '#FFFFFF',

@@ -56,7 +56,7 @@ const ChatList = ({ followList,user }) => {
       console.error('Error creating/retrieving chat room:', error);
     }
   };
-
+// console.log('roomId',selectedUser.roomId)
   return (
     <div>
       <List>
@@ -93,7 +93,7 @@ const ChatList = ({ followList,user }) => {
         </Box>
       ))}
     </List>
-    {selectedUser && <Chat user={user} recipient={selectedUser} />}
+    {selectedUser && <Chat user={user} recipient={selectedUser} roomId={selectedUser.roomId}/>}
     </div>
   );
 };

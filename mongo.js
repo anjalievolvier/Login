@@ -163,7 +163,7 @@ const chatMessageSchema = new mongoose.Schema({
         ref: 'collection',
         required: true,
     },
-    chatId: {
+    roomId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'chat',
         required: true,

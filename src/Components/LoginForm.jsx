@@ -28,7 +28,7 @@ const LoginForm = () => {
         email,
         password,
       });
-      console.log('response', response);
+      // console.log('response', response);
       if (response.data && response.data.user && response.data.user._id && response.data.authToken) {
         const userId = response.data.user._id;
         const authToken = response.data.authToken;

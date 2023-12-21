@@ -672,13 +672,12 @@ app.post('/add-comment', async (req, res) => {
   }
 });
 
-
 //////////// Chat
 
 app.post('/chat/create', async (req, res) => {
   try {
     const { user1, user2 } = req.body;
-// console.log('users.....',user1 , user2)
+    // console.log('users.....',user1 , user2)
     // Check if a chat room already exists for these users
     const existingChat = await mongo.chat.findOne({
       $or: [
@@ -730,7 +729,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    // console.log('User disconnected');
   });
 });
 
@@ -738,6 +737,85 @@ httpServer.listen(8001, () => {
   console.log('Socket.IO server is running on port 8001');
 });
 
+app.post('/chat/messages', async (req, res) => {
+  try {
+    const { sender, recipient, roomId, text } = req.body;
+
+    const newMessage = new mongo.chatMessage({
+      sender,
+      receiver: recipient,
+      roomId: roomId,
+      text,
+    });
+
+    const savedMessage = await newMessage.save();
+
+    // Respond with the saved message
+    res.status(200).json(savedMessage);
+  } catch (error) {
+    console.error('Error saving message:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/chat/messages/:roomId', async (req, res) => {
+  try {
+    // const roomId = req.params.roomId;
+    const roomId = new ObjectId(req.params.roomId);
+
+    //  console.log(roomId)
+    // Use the aggregation pipeline to fetch previous messages
+    const messages = await mongo.chatMessage.aggregate([
+      {
+        $match: {
+          roomId: roomId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'collections',
+          localField: 'receiver',
+          foreignField: '_id',
+          as: 'receiver',
+        },
+      },
+      {
+        $unwind: '$receiver',
+      },
+      {
+        $lookup: {
+          from: 'collections',
+          localField: 'sender',
+          foreignField: '_id',
+          as: 'sender',
+        },
+      },
+      {
+        $unwind: '$sender',
+      },
+      {
+        $project: {
+          'roomId': 1,
+          'senderFirstname': '$sender.firstname',
+          'senderLastname': '$sender.lastname',
+          'senderProfile': '$sender.imagePath',
+          'senderId': '$sender._id',
+          'receiverFirstname': '$receiver.firstname',
+          'receiverLastname': '$receiver.lastname',
+          'receiverProfile': '$receiver.imagePath',
+          'receiverId': '$receiver._id',
+          'text': 1,
+          'createdAt': 1,
+        },
+      },
+    ]).exec();
+    // console.log('messages...', messages)
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
