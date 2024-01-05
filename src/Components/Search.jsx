@@ -8,7 +8,7 @@ const Search = ({ user, fetchPosts }) => {
   const [searchResults, setSearchResults] = useState([]);
   const userId = localStorage.getItem('userId');
   const handleSearch = async () => {
-    console.log('inside handle search');
+    // console.log('inside handle search');
     const response = await fetch(`http://localhost:8000/users/search?query=${searchQuery}`);
     if (response.status === 200) {
       const searchData = await response.json();

@@ -17,7 +17,7 @@ const newSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        // required: true,
         minlength: 8,
     },
 
@@ -31,11 +31,11 @@ const newSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true
+        // required: true
     },
     phone: {
         type: Number,
-        required: true,
+        // required: true,
     },
     tokens: [
         {

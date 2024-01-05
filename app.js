@@ -101,7 +101,7 @@ app.post("/signup", async (req, res) => {
         else {
           const data = {
             email: email,
-            password: hashedPassword, // Save the hashed password
+            password: hashedPassword, 
             firstname: firstname,
             lastname: lastname,
             gender: gender,
@@ -814,6 +814,66 @@ app.get('/chat/messages/:roomId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching messages:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Google login route
+app.post('/google-login', async (req, res) => {
+  const { access_token } = req.body;
+
+  try {
+      // Fetch user information from Google using the access_token
+      const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${access_token}`,
+              'Content-Type': 'application/json',
+          },
+      });
+
+      if (!userInfoResponse.ok) {
+          throw new Error('Failed to fetch user information from Google');
+      }
+
+      const userInfo = await userInfoResponse.json();
+// console.log(userInfo);
+      const existingUser = await mongo.collection.findOne({ email: userInfo.email });
+
+      if (existingUser) {
+          // User exists, respond with user details
+          res.json({
+              message: 'User authenticated',
+              user: existingUser,
+          });
+      } else {
+          // User doesn't exist, create a new user
+          const authToken = crypto.randomBytes(10).toString('hex');
+          const expirationDate = new Date();
+          expirationDate.setHours(expirationDate.getHours() + 24);
+
+          const newUser = {
+              email: userInfo.email,
+              firstname: userInfo.given_name,
+              lastname: userInfo.family_name,
+              imagePath: [{
+                url: userInfo.picture,
+            }],
+              tokens: [{ token: authToken, expiration: expirationDate }],
+          };
+
+          await mongo.collection.insertMany(newUser);
+
+          // Respond with the new user details
+          res.json({
+              message: 'New user created and authenticated',
+              user: newUser,
+              authToken: authToken,
+              authTokenExpiration: expirationDate,
+          });
+      }
+  } catch (error) {
+      console.error('Error during Google login:', error);
+      res.status(500).json({ message: 'Login failed' });
   }
 });
 

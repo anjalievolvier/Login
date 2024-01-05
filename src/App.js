@@ -6,9 +6,11 @@ import Feed from './Pages/Feed';
 import PrivateRoute from './Components/PrivateRoute';
 import PublicRoute from './Components/PublicRoute';
 import {BrowserRouter as Router, Routes, Route,} from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-function App() {
+function App() { 
   return (
+    <GoogleOAuthProvider clientId="880107686540-heu6lab3s3tenocp3vv8vj72ijigkkim.apps.googleusercontent.com">
     <div className="App">
       <Router>
 
@@ -34,6 +36,7 @@ function App() {
         </Routes>
       </Router>
     </div>
+    </GoogleOAuthProvider>
   );
 }
 
