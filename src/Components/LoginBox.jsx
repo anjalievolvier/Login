@@ -12,7 +12,7 @@ const LoginBox = () => {
       flexDirection={'row'}
       sx={{ backgroundColor: '#E1E3FF', display: 'flex',flexDirection: 'column',alignItems: 'center',
         padding: { md: '50px', xs: '20px 30px 20px 30px' },
-        margin: { md: '30px', xs: '5px 20px 10px 20px' }, }}>
+        margin: { md: '20px', xs: '5px 20px 10px 20px' }, }}>
       {!isMobile && <TopText />}
       {isMobile ? (
         <>

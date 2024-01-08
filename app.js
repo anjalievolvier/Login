@@ -877,6 +877,59 @@ app.post('/google-login', async (req, res) => {
   }
 });
 
+// Facebook login endpoint
+app.post('/facebook-login', async (req, res) => {
+  try {
+      const { access_token } = req.body;
+console.log(req.body);
+      const fbResponse = await fetch(`https://graph.facebook.com/v13.0/me?fields=id,email,first_name,last_name,picture&access_token=${access_token}`);
+      const fbData = await fbResponse.json();
+console.log(fbData)
+      // Check if the Facebook user's email is available
+      if (!fbData.email) {
+          throw new Error('Facebook login failed: Email not provided by the user.');
+      }
+
+      const existingUser = await mongo.collection.findOne({ email: fbData.email });
+
+      if (existingUser) {
+          // User exists, respond with user details
+          res.json({
+              message: 'User authenticated',
+              user: existingUser,
+          });
+      } else {
+          // User doesn't exist, create a new user
+          const authToken = crypto.randomBytes(10).toString('hex');
+          const expirationDate = new Date();
+          expirationDate.setHours(expirationDate.getHours() + 24);
+
+          const newUser = {
+              email: fbData.email,
+              firstname: fbData.first_name,
+              lastname: fbData.last_name,
+              imagePath: [{
+                  url: fbData.picture.data.url,
+              }],
+              tokens: [{ token: authToken, expiration: expirationDate }],
+          };
+
+          await mongo.collection.insertMany(newUser);
+
+          // Respond with the new user details
+          res.json({
+              message: 'New user created and authenticated',
+              user: newUser,
+              authToken: authToken,
+              authTokenExpiration: expirationDate,
+          });
+      }
+  } catch (error) {
+      console.error('Facebook login error:', error);
+      res.status(500).json({ message: 'Login failed' });
+  }
+});
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 })

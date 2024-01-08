@@ -41,6 +41,7 @@ const Chat = ({ user, recipient, roomId, onClose }) => {
       socket.emit('unsubscribe', { sender: user._id, recipient: recipient._id, roomId });
       socket.off('message');
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user._id, recipient._id, roomId]);
 
   const sendMessage = () => {

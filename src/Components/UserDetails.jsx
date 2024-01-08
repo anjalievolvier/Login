@@ -245,32 +245,36 @@ function UserDetails({ user, authToken, setAuthToken, }) {
             {user.email}
           </Typography>
 
-          <Typography sx={{
-            color: '#000',
-            fontFamily: 'Aleo, sans-serif',
-            fontSize: '18px',
-            fontStyle: 'normal',
-            fontWeight: '400',
-            lineHeight: 'normal',
-          }}>
-            +91{' '}
-            {user.phone}
-          </Typography>
+          {user.phone && (
+            <Typography sx={{
+              color: '#000',
+              fontFamily: 'Aleo, sans-serif',
+              fontSize: '18px',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              lineHeight: 'normal',
+            }}>
+              +91{' '}
+              {user.phone}
+            </Typography>
+          )}
 
-          <Typography sx={{
-            color: '#000',
-            fontFamily: 'Aleo, sans-serif',
-            fontSize: '20px',
-            fontStyle: 'normal',
-            fontWeight: '400',
-            lineHeight: 'normal',
-          }}>
-            {user.gender === 'female' ? (
-              <FemaleIcon fontSize="inherit" color="#0E9B9" />
-            ) : (
-              <MaleIcon fontSize="inherit" color="#0E9B9" />
-            )}  {user.gender}
-          </Typography>
+{user.gender && (
+            <Typography sx={{
+              color: '#000',
+              fontFamily: 'Aleo, sans-serif',
+              fontSize: '20px',
+              fontStyle: 'normal',
+              fontWeight: '400',
+              lineHeight: 'normal',
+            }}>
+              {user.gender === 'female' ? (
+                <FemaleIcon fontSize="inherit" color="#0E9B9" />
+              ) : (
+                <MaleIcon fontSize="inherit" color="#0E9B9" />
+              )}  {user.gender}
+            </Typography>
+          )}
         </Box>
       </Box>
       <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'} gap={'10px'}
